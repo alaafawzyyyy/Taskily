@@ -1,7 +1,3 @@
 export default function Home() {
-	const name = 'alaa'
-	return (
-		<div>
-		</div>
-	)
+  return <div className="text-primary">hi</div>;
 }
