@@ -1,25 +1,18 @@
 'use client';
 import Input from '../ui/Input';
-import { useForm } from "react-hook-form";
-
-export type FormData = {
-  name: string;
-  email: string;
-  jobTitle: string;
-  password: string;
-  confirmPassword: string;
-};
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signupSchema, SignupFormData } from '../lib/validation/sighupSchema';
+import { useForm } from 'react-hook-form';
 
 export default function SignUpForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
 
-  const onSubmit=(data: FormData)=> {
-  }
-  
+  const onSubmit = (data: SignupFormData) => {};
+
   return (
     <div>
       <div>
@@ -34,6 +27,7 @@ export default function SignUpForm() {
           type="text"
           id="name"
           {...register('name')}
+          error={errors.name?.message}
         />
         <Input
           label="EMAIL"
@@ -42,6 +36,7 @@ export default function SignUpForm() {
           type="email"
           id="email"
           {...register('email')}
+          error={errors.email?.message}
         />
         <Input
           label="JOB TITLE"
@@ -59,6 +54,7 @@ export default function SignUpForm() {
             type="password"
             id="password"
             {...register('password')}
+            error={errors.password?.message}
           />
           <Input
             label="CONFIRM PASSWORD"
@@ -67,6 +63,7 @@ export default function SignUpForm() {
             type="password"
             id="confirm-password"
             {...register('confirmPassword')}
+            error={errors.confirmPassword?.message}
           />
         </div>
         <div>
