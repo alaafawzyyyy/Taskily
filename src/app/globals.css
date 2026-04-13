@@ -9,6 +9,10 @@
   }
 }
 
+html, body {
+  height: 100%;
+}
+
 @layer components {
   .text-display-lg {
     font-size: 56px;
