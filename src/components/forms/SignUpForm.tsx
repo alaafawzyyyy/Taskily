@@ -3,6 +3,7 @@ import Input from '../ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, SignupFormData } from '../lib/validation/sighupSchema';
 import { useForm } from 'react-hook-form';
+import { signup } from '../lib/api/auth';
 
 export default function SignUpForm() {
   const {
@@ -11,7 +12,17 @@ export default function SignUpForm() {
     formState: { errors },
   } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
 
-  const onSubmit = (data: SignupFormData) => {};
+  const onSubmit = async (data: SignupFormData) => {
+    const result = await signup({
+      email: data.email,
+      password: data.password,
+      data: {
+        name: data.name,
+        job_title: data.jobTitle,
+      },
+    });
+    console.log(result)
+  };
 
   return (
     <div>
