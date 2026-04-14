@@ -3,7 +3,7 @@ import Input from '../ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, SignupFormData } from '../lib/validation/sighupSchema';
 import { useForm, useWatch } from 'react-hook-form';
-import { signup } from '../lib/api/auth';
+import { auth } from '../lib/api/auth';
 import { useRouter } from 'next/navigation';
 export default function SignUpForm() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function SignUpForm() {
       name: 'password',
     }) || '';
   const onSubmit = async (data: SignupFormData) => {
-    const result = await signup({
+    const result = await auth('signup', {
       email: data.email,
       password: data.password,
       data: {
@@ -149,7 +149,7 @@ export default function SignUpForm() {
         <span className=" text-slate-700">Already have an account? </span>
         <a
           className="font-bold text-primary"
-          href="#"
+          href="login"
         >
           Log in
         </a>

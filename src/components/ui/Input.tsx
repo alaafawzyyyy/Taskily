@@ -8,7 +8,7 @@ export default function Input(props: any) {
         {props.label}
       </label>
       <input
-        className={`w-full h-[48px] bg-surface-highest rounded-[4px] py-[14px] px-[16px] ${
+        className={`w-full h-[48px] bg-surface-highest rounded-sm py-[14px] px-[16px] ${
       props.error ? "border border-error" : "border border-transparent"}`}
         id={props.id}
         {...props}
