@@ -1,6 +1,27 @@
+'use client';
+
 import Input from '../ui/Input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginSchema, LoginFormData } from '../lib/validation/LoginSchema';
+import { useForm } from 'react-hook-form';
+import { auth } from '../lib/api/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({ resolver: zodResolver(LoginSchema) });
+
+  const onSubmit = async (data: LoginFormData) => {
+      const result = await auth('login', {
+        email: data.email,
+        password: data.password,
+      });
+    }
+
   return (
     <div className=" flex flex-col items-center w-full max-w-[480px] rounded-lg p-6 md:p-12 bg-[#ffff] shadow-[0_24px_48px_rgba(4,27,60,0.06)]">
       {/* header section */}
@@ -13,7 +34,10 @@ export default function LoginForm() {
         </p>
       </div>
       {/* Form section */}
-      <form className=" w-full pb-8">
+      <form
+        className=" w-full pb-8"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="flex flex-col gap-6">
           <Input
             label="EMAIL"
@@ -21,6 +45,8 @@ export default function LoginForm() {
             desc=""
             type="email"
             id="email"
+            {...register('email')}
+             error={errors.email?.message}
           />
           <Input
             label="PASSWORD"
@@ -28,6 +54,8 @@ export default function LoginForm() {
             desc=""
             type="password"
             id="password"
+            {...register('password')}
+             error={errors.password?.message}
           />
           {/* remember & forgot */}
           <div className="flex items-center justify-between">

@@ -7,10 +7,15 @@ type AuthRequest = {
   };
 };
 
+type LoginRequest={
+    email: string;
+  password: string;
+}
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export async function auth(type: 'signup' | 'login', data: AuthRequest) {
+export async function auth(type: 'signup' | 'login', data: AuthRequest| LoginRequest ) {
   const endpoint = type === 'login' ? 'token?grant_type=password' : 'signup';
   const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
     method: 'POST',
