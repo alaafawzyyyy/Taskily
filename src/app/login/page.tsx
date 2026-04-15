@@ -4,7 +4,7 @@ export default function Signup() {
   return (
       <div >
         <Logo />
-        <div className="min-h-screen flex justify-center pt-2 pb-10">
+        <div className="min-h-screen flex justify-center pt-2 p">
           <LoginForm />
         </div>
     </div>
