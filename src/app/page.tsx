@@ -1,6 +1,6 @@
 'use client';
+import { Navbar } from '@/components/Navbar';
 import { useEffect } from 'react';
-
 export default function Home() {
   useEffect(() => {
     const hash = window.location.hash.substring(1);
@@ -11,5 +11,9 @@ export default function Home() {
       window.location.href = `/reset-password#${hash}`;
     }
   }, []);
-  return <div className="text-primary">Home Page</div>;
+  return (
+    <div>
+      <Navbar />
+    </div>
+  );
 }

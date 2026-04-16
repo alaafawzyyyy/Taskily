@@ -1,5 +1,5 @@
 import SignUpForm from '../../components/forms/SignUpForm';
-import Logo from '../../components/ui/Logo';
+import Logo from '../../components/Logo';
 export default function Signup() {
   return (
       <div >
