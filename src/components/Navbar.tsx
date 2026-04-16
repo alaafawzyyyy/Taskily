@@ -3,19 +3,23 @@ import Logo from '../components/Logo';
 
 import menu from '../../public/assets/icons/menu.svg';
 import Image from 'next/image';
-
-export function Navbar() {
+type typeopen = {
+  isOpen: boolean;
+};
+export function Navbar({ isOpen }: typeopen) {
   return (
     <div className="flex justify-between h-[64px] border-b px-6 py-3 items-center">
       <div className="flex justify-center">
-        <button>
-          <Image
-            src={menu}
-            alt="menu"
-            className=" block md:hidden"
-          />
-        </button>
-        <Logo hideFirst />
+        {isOpen && (
+          <button>
+            <Image
+              src={menu}
+              alt="menu"
+              className={!isOpen ? 'block' : ' md:hidden'}
+            />
+          </button>
+        )}
+        {isOpen && <Logo />}
       </div>
       <div className="flex gap-3 pl-4 md:border-l ">
         <div className="md:flex flex-col items-center font-bold hidden md:display">

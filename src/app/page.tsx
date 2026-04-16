@@ -1,7 +1,10 @@
 'use client';
 import { Navbar } from '@/components/Navbar';
-import { useEffect } from 'react';
+import { Sidebar } from '@/components/Sidebar';
+import { useEffect, useState } from 'react';
+
 export default function Home() {
+const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
@@ -11,9 +14,27 @@ export default function Home() {
       window.location.href = `/reset-password#${hash}`;
     }
   }, []);
-  return (
-    <div>
-      <Navbar />
+  return isOpen ? (
+    <div className="flex flex-col h-screen">
+      <Navbar isOpen={isOpen}/>
+
+      <div className="flex flex-1">
+        <Sidebar
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      </div>
+    </div>
+  ) : (
+    <div className="flex h-screen">
+      <Sidebar
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+
+      <div className="flex flex-col flex-1">
+        <Navbar isOpen={isOpen}/>
+      </div>
     </div>
   );
 }

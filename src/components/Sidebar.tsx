@@ -1,0 +1,110 @@
+'use client';
+import Link from 'next/link';
+import Logo from './Logo';
+import Image from 'next/image';
+import project from '../../public/assets/projects.svg';
+import epic from '../../public/assets/icons/epics.svg';
+import tasks from '../../public/assets/icons/tasks.svg';
+import details from '../../public/assets/icons/details.svg';
+import members from '../../public/assets/icons/members.svg';
+import collapse from '../../public/assets/icons/collapse.svg';
+import logout from '../../public/assets/icons/logout.svg';
+type SidebarProps = {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+  return (
+    <div
+      className={`flex flex-col p-4  ${!isOpen ? 'w-[256px]' : 'w-20'} bg-[#F1F3FF] h-screen`}
+    >
+      <div className="pb-8">{!isOpen && <Logo />}</div>
+      <nav className="flex flex-col gap-1 flex-1">
+        <Link
+          href=""
+          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 bg-[#FFFFFF]"
+        >
+          <Image
+            src={project}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && <p className="text-[#003D9B] text-[14px]">Projects</p>}
+        </Link>
+        <Link
+          href=""
+          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
+        >
+          <Image
+            src={epic}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && (
+            <p className="text-[#041B3C] text-[14px]">Project Epics</p>
+          )}
+        </Link>
+        <Link
+          href=""
+          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 "
+        >
+          <Image
+            src={tasks}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && (
+            <p className="text-[#041B3C] text-[14px]">Project Tasks</p>
+          )}
+        </Link>
+        <Link
+          href=""
+          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
+        >
+          <Image
+            src={members}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && (
+            <p className="text-[#041B3C] text-[14px]">Project Members</p>
+          )}
+        </Link>
+        <Link
+          href=""
+          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
+        >
+          <Image
+            src={details}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && (
+            <p className="text-[#041B3C] text-[14px]">Project Details</p>
+          )}
+        </Link>
+      </nav>
+      <div className="flex flex-col border-t pt-6 gap-1">
+        <button
+          className="flex py-[10px] px-3 gap-3"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          <Image
+            src={collapse}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && <p className="text-[#041B3C] text-[14px]">Collapse</p>}
+        </button>
+        <button className="flex py-[10px] px-3 gap-3">
+          <Image
+            src={logout}
+            alt="project icon"
+            className="w-[21.5px] h-4"
+          />
+          {!isOpen && <p className="text-error text-[14px]">Logout</p>}
+        </button>
+      </div>
+    </div>
+  );
+}
