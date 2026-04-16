@@ -24,7 +24,7 @@ export default function LoginForm() {
       });
       router.replace('/dashboard');
     } catch (err: any) {
-    setError(err.message);
+      setError(err.message);
     }
   };
 
@@ -71,7 +71,10 @@ export default function LoginForm() {
               <input type="checkbox" />
               <span className=" text-xs text-[#434654]">Remember Me</span>
             </label>
-            <a className="text-xs text-primary cursor-pointer font-medium">
+            <a
+              href="forgot-password "
+              className="text-xs text-primary cursor-pointer font-medium"
+            >
               Forget Password?
             </a>
           </div>

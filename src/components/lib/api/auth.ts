@@ -92,6 +92,28 @@ export async function sendResetLink(email: string) {
 
   const data = await res.json();
 
-   return { ok: res.ok, data };
+  return { ok: res.ok, data };
+}
 
+// reset password
+
+export async function resetPassword(password: string) {
+  const accessToken = getCookie('access_token');
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      apikey: SUPABASE_ANON_KEY!,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      password,
+    }),
+  });
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to reset password');
+  }
+  return data;
 }

@@ -19,7 +19,7 @@ export const passwordSchema = z
   })
   .refine((val) => /[^A-Za-z0-9]/.test(val), {
     message: 'Must contain at least one special character',
-  });  
+  });
 
 export const signupSchema = z
   .object({
@@ -50,10 +50,14 @@ export const signupSchema = z
     path: ['confirmPassword'],
   });
 
-  export const resetPasswordSchema = z.object({
-  password: passwordSchema,
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-});
+// resend password schema
+export const resetPasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
