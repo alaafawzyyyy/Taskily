@@ -21,6 +21,7 @@ export function ResetPasswordForm({
 }) {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (accessToken) {
@@ -76,15 +77,24 @@ export function ResetPasswordForm({
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="flex flex-col gap-6">
-              <Input
-                label="NEW PASSWORD"
-                placeholder="••••••••"
-                desc=""
-                type="password"
-                id="password"
-                {...register('password')}
-                error={errors.password?.message}
-              />
+              <div className="relative w-full">
+                <Input
+                  label="NEW PASSWORD"
+                  placeholder="••••••••"
+                  desc=""
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  {...register('password')}
+                  error={errors.password?.message}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute right-3 top-[38px] z-10 "
+                >
+                  {showPassword ? '👁' : '👁'}
+                </button>
+              </div>
               <Input
                 label="CONFIRM PASSWORD"
                 placeholder="••••••••"
@@ -127,7 +137,7 @@ export function ResetPasswordForm({
                 type="submit"
                 className="w-full h-12 rounded-sm bg-gradient-to-r from-primary to-primary-container text-white"
               >
-                {isSubmitting ? 'Updating...' : 'Reset Password'}{' '}
+                {isSubmitting ? 'Updating...' : 'Update Passsword'}{' '}
               </button>
               <a
                 className="text-primary text-center text-[13px] font-medium"
