@@ -117,3 +117,21 @@ export async function resetPassword(password: string) {
   }
   return data;
 }
+
+// get user data
+export async function getUser() {
+  const token = getCookie('access_token');
+  if (!token) throw new Error('No token');
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    method: 'GET',
+    headers: {
+      apikey: SUPABASE_ANON_KEY!,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) throw new Error('Failed to fetch user');
+
+  return res.json();
+}
