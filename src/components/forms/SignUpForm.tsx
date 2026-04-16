@@ -5,6 +5,7 @@ import { signupSchema, SignupFormData } from '../lib/validation/sighupSchema';
 import { useForm, useWatch } from 'react-hook-form';
 import { auth } from '../lib/api/auth';
 import { useRouter } from 'next/navigation';
+import { PasswordValidation } from '../ui/PasswordValidation';
 export default function SignUpForm() {
   const router = useRouter();
   const {
@@ -31,9 +32,6 @@ export default function SignUpForm() {
       router.replace('/');
     }
   };
-  const hasMinLength = password.length >= 8;
-  const hasUpperLowerNumber = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   return (
     // main
     <div className="flex flex-col items-center w-full max-w-[576px] rounded-lg p-6 md:p-12 bg-[#ffff] shadow-[0_24px_48px_rgba(4,27,60,0.06)]">
@@ -98,42 +96,7 @@ export default function SignUpForm() {
               error={errors.confirmPassword?.message}
             />
           </div>
-          {/* check box */}
-          <div className=" flex flex-col rounded-md p-4 gap-2 bg-[#E8EDFF]">
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs
-      ${hasMinLength ? 'bg-green-500' : 'border border-gray-400'}`}
-              >
-                {hasMinLength && '✓'}
-              </div>
-              <span className=" text-xs text-[#434654]">
-                At least 8 characters
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs
-      ${hasUpperLowerNumber ? 'bg-green-500' : 'border border-gray-400'}`}
-              >
-                {hasUpperLowerNumber && '✓'}
-              </div>
-              <span className=" text-xs text-[#434654]">
-                One uppercase, lowercase, and digit
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-xs
-      ${hasSpecialChar ? 'bg-green-500' : 'border border-gray-400'}`}
-              >
-                {hasSpecialChar && '✓'}
-              </div>
-              <span className=" text-xs text-[#434654]">
-                One special character
-              </span>
-            </div>
-          </div>
+
           {/* create account */}
           <button
             type="submit"
@@ -143,7 +106,23 @@ export default function SignUpForm() {
           </button>
         </div>
       </form>
-
+      <PasswordValidation
+        password={password}
+        rules={[
+          {
+            label: 'At least 8 characters',
+            test: (p) => p.length >= 8,
+          },
+          {
+            label: 'One uppercase, lowercase, and digit',
+            test: (p) => /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(p),
+          },
+          {
+            label: 'One special character',
+            test: (p) => /[!@#$%^&*(),.?":{}|<>]/.test(p),
+          },
+        ]}
+      />
       {/* Footer section */}
       <div className="mt-6 text-center text-body-md">
         <span className=" text-slate-700">Already have an account? </span>
