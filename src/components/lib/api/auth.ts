@@ -1,3 +1,4 @@
+'use client';
 import { getCookie, setCookie } from '../cookies';
 
 type AuthRequest = {
@@ -17,6 +18,7 @@ type LoginRequest = {
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+// get new access token
 export async function refreshAccessToken() {
   const refreshToken = getCookie('refresh_token');
   const res = await fetch(
@@ -42,6 +44,7 @@ export async function refreshAccessToken() {
   return data.access_token;
 }
 
+// authorization
 export async function auth(
   type: 'signup' | 'login',
   data: AuthRequest | LoginRequest,
@@ -72,4 +75,23 @@ export async function auth(
     return user;
   }
   return result;
+}
+
+// sending email
+
+export async function sendResetLink(email: string) {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY!,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY!}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await res.json();
+
+   return { ok: res.ok, data };
+
 }

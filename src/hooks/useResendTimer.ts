@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export function useResendTimer(initialTime = 20) {
+export function useResendTimer(initialTime = 300) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -24,6 +24,7 @@ export function useResendTimer(initialTime = 20) {
   }, [isRunning]);
 
   const start = () => {
+    if (isRunning) return;
     setTimeLeft(initialTime);
     setIsRunning(true);
   };
