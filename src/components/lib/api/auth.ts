@@ -1,5 +1,5 @@
 'use client';
-import { getCookie, setCookie } from '../cookies';
+import { getCookie, setCookie, deleteCookie } from '../cookies';
 
 type AuthRequest = {
   email: string;
@@ -134,4 +134,29 @@ export async function getUser() {
   if (!res.ok) throw new Error('Failed to fetch user');
 
   return res.json();
+}
+
+// log out
+export async function logout() {
+  const accessToken = getCookie('access_token');
+  if (!accessToken) {
+    throw new Error('No token found');
+  }
+
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY!,
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Logout failed');
+  }
+
+  deleteCookie('access_token');
+  deleteCookie('refresh_token');
+  return true;
 }

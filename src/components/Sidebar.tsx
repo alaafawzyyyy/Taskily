@@ -8,12 +8,28 @@ import tasks from '../../public/assets/icons/tasks.svg';
 import details from '../../public/assets/icons/details.svg';
 import members from '../../public/assets/icons/members.svg';
 import collapse from '../../public/assets/icons/collapse.svg';
-import logout from '../../public/assets/icons/logout.svg';
+import Logout from '../../public/assets/icons/logout.svg';
+import { clearUser } from '../store/slices/userslices';
+import { useDispatch } from 'react-redux';
+import { logout } from '../components/lib/api/auth';
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+
+  const dispatch = useDispatch();
+  
+  const handleLogout = async () => {
+    try {
+      await logout();
+      dispatch(clearUser());
+      window.location.href = '/login';
+    } catch (err) {
+      console.error(err);
+      alert('Logout failed, please try again.');
+    }
+  };
   return (
     <div
       className={`flex flex-col p-4  ${!isOpen ? 'w-[256px]' : 'w-20'} bg-[#F1F3FF] h-screen`}
@@ -96,9 +112,12 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           />
           {!isOpen && <p className="text-[#041B3C] text-[14px]">Collapse</p>}
         </button>
-        <button className="flex py-[10px] px-3 gap-3">
+        <button
+          className="flex py-[10px] px-3 gap-3"
+          onClick={handleLogout}
+        >
           <Image
-            src={logout}
+            src={Logout}
             alt="project icon"
             className="w-[21.5px] h-4"
           />
