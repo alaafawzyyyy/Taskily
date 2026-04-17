@@ -3,22 +3,28 @@ import Logo from '../components/Logo';
 
 import menu from '../../public/assets/icons/menu.svg';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getUser } from './lib/api/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../store/slices/userslices';
 type typeopen = {
   isOpen: boolean;
 };
 
 export function Navbar({ isOpen }: typeopen) {
-  const [user, setUser] = useState<any>(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.user.user);
 
   useEffect(() => {
     getUser()
-      .then(setUser)
+      .then((data) => {
+        dispatch(setUser(data));
+      })
       .catch(() => {
         window.location.href = '/login';
       });
-  }, []);
+  }, [dispatch]);
+
   const name = user?.user_metadata?.name || 'User';
   const job = user?.user_metadata?.job_title || '';
 
