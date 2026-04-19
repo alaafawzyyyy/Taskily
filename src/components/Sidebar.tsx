@@ -31,11 +31,11 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   };
   return (
     <div
-      className={`flex flex-col p-4 h-[1024px] ${!isOpen ? 'w-[256px]' : 'w-20'} bg-[#F1F3FF] justify-between`}
+      className={`md:flex flex-col  p-4 h-[1024px] ${isOpen ? 'w-[256px]'  : 'hidden md:w-20'} bg-[#F1F3FF]`}
     >
       {/* Logo */}
       <div>
-        <div>{!isOpen && <Logo />}</div>
+        <div>{isOpen && <Logo />}</div>
       </div>
 
       {/* Links */}
@@ -50,7 +50,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && <p className="text-[#003D9B] text-[14px]">Projects</p>}
+          {isOpen && <p className="text-[#003D9B] text-[14px]">Projects</p>}
         </Link>
         {/* Project Epics */}
         <Link
@@ -62,7 +62,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && (
+          {isOpen && (
             <p className="text-[#041B3C] text-[14px]">Project Epics</p>
           )}
         </Link>
@@ -76,7 +76,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && (
+          {isOpen && (
             <p className="text-[#041B3C] text-[14px]">Project Tasks</p>
           )}
         </Link>
@@ -90,7 +90,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && (
+          {isOpen && (
             <p className="text-[#041B3C] text-[14px]">Project Members</p>
           )}
         </Link>
@@ -104,16 +104,16 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && (
+          {isOpen && (
             <p className="text-[#041B3C] text-[14px]">Project Details</p>
           )}
         </Link>
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="flex flex-col border-t pt-6 gap-1">
+      <div className="flex flex-col border-t pt-6 gap-1 mt-auto">
         <button
-          className="flex py-[10px] px-3 gap-3"
+          className=" hidden md:flex py-[10px] px-3 gap-3"
           onClick={() => setIsOpen((prev) => !prev)}
         >
           <Image
@@ -121,7 +121,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && <p className="text-[#041B3C] text-[14px]">Collapse</p>}
+          {isOpen && <p className="text-[#041B3C] text-[14px]">Collapse</p>}
         </button>
         <button
           className="flex py-[10px] px-3 gap-3"
@@ -132,7 +132,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {!isOpen && <p className="text-error text-[14px]">Logout</p>}
+          {isOpen && <p className="text-error text-[14px]">Logout</p>}
         </button>
       </div>
     </div>

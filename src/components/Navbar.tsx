@@ -1,6 +1,5 @@
 'use client';
 import Logo from '../components/Logo';
-
 import menu from '../../public/assets/icons/menu.svg';
 import Image from 'next/image';
 import { useEffect } from 'react';
@@ -10,9 +9,10 @@ import { setUser } from '../store/slices/userslices';
 import { RootState } from '../store/index';
 type typeopen = {
   isOpen: boolean;
+  setIsOpen: any;
 };
 
-export function Navbar({ isOpen }: typeopen) {
+export function Navbar({ isOpen, setIsOpen }: typeopen) {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
   useEffect(() => {
@@ -37,21 +37,21 @@ export function Navbar({ isOpen }: typeopen) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
   return (
-    <div className="flex justify-between h-[64px] border-b px-6 py-3 items-center w-full">
+    <div className="flex justify-between h-[64px] w-full border-b px-6 py-3 items-center sticky top-0 z-[40] bg-white">
       <div className="flex justify-center">
-        {isOpen && (
-          <button>
-            <Image
-              src={menu}
-              alt="menu"
-              className={!isOpen ? 'block' : ' md:hidden'}
-            />
-          </button>
-        )}
-        {isOpen && <Logo />}
+
+        <button onClick={() => setIsOpen((prev) => !prev)}>
+          <Image
+            src={menu}
+            alt="menu"
+            className={`${isOpen ? 'hidden' : 'block md:hidden'}`}
+          />
+        </button>
+        {!isOpen && <Logo />}
       </div>
-      <div className="flex gap-3 pl-4 md:border-l ">
-        <div className="md:flex flex-col items-center font-bold hidden md:display">
+      <div className="flex gap-3 pl-4">
+        {/* name and job */}
+        <div className="hidden md:flex flex-col items-center font-bold">
           <p className="text-[#041B3C] text-[14px]">{name}</p>
           <p className="text-primary text-[10px]">{job}</p>
         </div>

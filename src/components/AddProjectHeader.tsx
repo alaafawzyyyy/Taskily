@@ -3,7 +3,7 @@ import addMember from '../../public/assets/icons/addMember.svg';
 import space from '../../public/assets/icons/space.svg';
 export function AddProjectHeader() {
   return (
-    <div className="flex h-[64px] top-8 left-8 justify-between relative items-end">
+    <div className="hidden md:flex h-[64px] top-8 left-8 justify-between relative items-end w-full">
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <p className="font-bold text-[12px] leading-4 uppercase text-[#434654] tracking-[1.2px]">
@@ -14,7 +14,6 @@ export function AddProjectHeader() {
             alt="space"
           />
           <p className="font-bold text-[12px] leading-4 uppercase text-[#003D9B] tracking-[1.2px]">
-            {' '}
             add new project
           </p>
         </div>
@@ -22,7 +21,7 @@ export function AddProjectHeader() {
           add new project
         </p>
       </div>
-      <button className="flex items-center  h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
+      <button className="flex items-center h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
         <Image
           src={addMember}
           alt="add member icon"
