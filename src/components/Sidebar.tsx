@@ -17,9 +17,8 @@ type SidebarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
-
   const dispatch = useDispatch();
-  
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -32,10 +31,16 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   };
   return (
     <div
-      className={`flex flex-col p-4  ${!isOpen ? 'w-[256px]' : 'w-20'} bg-[#F1F3FF] h-screen`}
+      className={`flex flex-col p-4 h-[1024px] ${!isOpen ? 'w-[256px]' : 'w-20'} bg-[#F1F3FF] justify-between`}
     >
-      <div className="pb-8">{!isOpen && <Logo />}</div>
-      <nav className="flex flex-col gap-1 flex-1">
+      {/* Logo */}
+      <div>
+        <div>{!isOpen && <Logo />}</div>
+      </div>
+
+      {/* Links */}
+      <nav className="flex flex-col gap-1 flex-1 ">
+        {/* Projects */}
         <Link
           href=""
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 bg-[#FFFFFF]"
@@ -47,6 +52,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           />
           {!isOpen && <p className="text-[#003D9B] text-[14px]">Projects</p>}
         </Link>
+        {/* Project Epics */}
         <Link
           href=""
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
@@ -60,6 +66,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <p className="text-[#041B3C] text-[14px]">Project Epics</p>
           )}
         </Link>
+        {/* Project Tasks */}
         <Link
           href=""
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 "
@@ -73,6 +80,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <p className="text-[#041B3C] text-[14px]">Project Tasks</p>
           )}
         </Link>
+        {/* Project Members */}
         <Link
           href=""
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
@@ -86,6 +94,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <p className="text-[#041B3C] text-[14px]">Project Members</p>
           )}
         </Link>
+        {/* Project Dtails */}
         <Link
           href=""
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
@@ -100,6 +109,8 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           )}
         </Link>
       </nav>
+
+      {/* Sidebar Footer */}
       <div className="flex flex-col border-t pt-6 gap-1">
         <button
           className="flex py-[10px] px-3 gap-3"

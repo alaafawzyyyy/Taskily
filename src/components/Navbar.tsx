@@ -37,7 +37,7 @@ export function Navbar({ isOpen }: typeopen) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
   return (
-    <div className="flex justify-between h-[64px] border-b px-6 py-3 items-center">
+    <div className="flex justify-between h-[64px] border-b px-6 py-3 items-center w-full">
       <div className="flex justify-center">
         {isOpen && (
           <button>

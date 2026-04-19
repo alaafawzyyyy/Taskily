@@ -15,7 +15,7 @@ export default function Home() {
     }
   }, []);
   return isOpen ? (
-    <div className="flex flex-col h-screen">
+    <div >
       <Navbar isOpen={isOpen} />
 
       <div className="flex flex-1">
@@ -26,7 +26,7 @@ export default function Home() {
       </div>
     </div>
   ) : (
-    <div className="flex h-screen">
+    <div>
       <Sidebar
         isOpen={isOpen}
         setIsOpen={setIsOpen}

@@ -17,19 +17,19 @@ export default function Home({ children }: childrenProps) {
     }
   }, []);
   return isOpen ? (
-    <div className="flex flex-col h-screen">
-      <Navbar isOpen={isOpen} />
+    <div className="flex flex-col w-full bg-[#F9F9FF]">
+      <Navbar  isOpen={isOpen} />
 
       <div className="flex flex-1">
         <Sidebar
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-        <main>{children}</main>
+        <main className="flex flex-1 justify-center">{children}</main>
       </div>
     </div>
   ) : (
-    <div className="flex h-screen">
+    <div className="flex w-full bg-[#F9F9FF]">
       <Sidebar
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -37,7 +37,7 @@ export default function Home({ children }: childrenProps) {
 
       <div className="flex flex-col flex-1">
         <Navbar isOpen={isOpen} />
-        <main>{children}</main>
+        <main >{children}</main>
       </div>
     </div>
   );
