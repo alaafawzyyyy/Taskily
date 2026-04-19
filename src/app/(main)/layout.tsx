@@ -2,8 +2,10 @@
 import { Navbar } from '@/components/Navbar';
 import { Sidebar } from '@/components/Sidebar';
 import { useEffect, useState } from 'react';
-
-export default function Home({children}) {
+type childrenProps = {
+  children: React.ReactNode;
+};
+export default function Home({ children }: childrenProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     const hash = window.location.hash.substring(1);

@@ -7,14 +7,14 @@ import { useEffect } from 'react';
 import { getUser } from './lib/api/auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../store/slices/userslices';
+import { RootState } from '../store/index';
 type typeopen = {
   isOpen: boolean;
 };
 
 export function Navbar({ isOpen }: typeopen) {
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.user.user);
-
+  const user = useSelector((state: RootState) => state.user.user);
   useEffect(() => {
     getUser()
       .then((data) => {

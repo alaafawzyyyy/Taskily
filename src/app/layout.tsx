@@ -1,6 +1,9 @@
 import './globals.css';
 import Providers from './storeProvider';
-export default function RootLayout({ children }) {
+type childrenProps = {
+  children: React.ReactNode;
+};
+export default function RootLayout({ children }: childrenProps) {
   return (
     <html>
       <body>

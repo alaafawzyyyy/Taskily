@@ -3,6 +3,9 @@
 import { Provider } from 'react-redux';
 import { store } from '@/store';
 
-export default function Providers({ children }) {
+type childrenProps = {
+  children: React.ReactNode;
+};
+export default function Providers({ children }: childrenProps) {
   return <Provider store={store}>{children}</Provider>;
 }

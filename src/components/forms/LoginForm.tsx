@@ -23,11 +23,11 @@ export default function LoginForm() {
         password: data.password,
       });
       router.replace('/');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unexpected error';
+      setError(message);
     }
   };
-
   return (
     <div className=" flex flex-col items-center w-full max-w-[480px] rounded-lg p-6 md:p-12 bg-[#ffff] shadow-[0_24px_48px_rgba(4,27,60,0.06)]">
       {/* header section */}

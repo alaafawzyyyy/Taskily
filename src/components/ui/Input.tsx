@@ -1,4 +1,11 @@
-export default function Input(props: any) {
+type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  desc?: string;
+  error?: string;
+  id?: string;
+};
+
+export default function Input(props: Props) {
   return (
     <div className="w-full h-[70.5]">
       <label
@@ -9,13 +16,16 @@ export default function Input(props: any) {
       </label>
       <input
         className={`w-full h-[48px] bg-surface-highest rounded-sm py-[14px] px-[16px] ${
-      props.error ? "border border-error" : "border border-transparent"}`}
+          props.error ? 'border border-error' : 'border border-transparent'
+        }`}
         id={props.id}
         {...props}
       />
       {/* desc */}
       {props.desc && !props.error && (
-        <p className="hidden lg:block text-xs text-slate-300 pt-1">{props.desc}</p>
+        <p className="hidden lg:block text-xs text-slate-300 pt-1">
+          {props.desc}
+        </p>
       )}
 
       {/* error */}
