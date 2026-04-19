@@ -9,12 +9,10 @@ import {
 } from '../lib/validation/sighupSchema';
 import { useRouter } from 'next/navigation';
 import { resetPassword } from '../lib/api/auth';
-import { useEffect, useState } from 'react';
-import { setCookie } from '../lib/cookies';
+import { useState } from 'react';
 
 export function ResetPasswordForm({
   accessToken,
-  refreshToken,
 }: {
   accessToken: string;
   refreshToken: string;
@@ -22,15 +20,6 @@ export function ResetPasswordForm({
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (accessToken) {
-      setCookie('access_token', accessToken);
-    }
-    if (refreshToken) {
-      setCookie('refresh_token', refreshToken);
-    }
-  }, [accessToken, refreshToken]);
 
   const {
     register,
@@ -48,7 +37,7 @@ export function ResetPasswordForm({
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {
-      await resetPassword(data.password);
+      await resetPassword(data.password, accessToken);
       setSuccess(true);
       setTimeout(() => {
         router.push('/login');
