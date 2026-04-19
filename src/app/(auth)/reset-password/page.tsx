@@ -1,14 +1,13 @@
 'use client';
 import Logo from '@/components/Logo';
-import { ResetPasswordForm } from '../../components/forms/ResetPasswordForm';
-
+import { ResetPasswordForm } from '../../../components/forms/ResetPasswordForm';
 
 export default function ResetPassword() {
   const hash =
     typeof window !== 'undefined' ? window.location.hash.substring(1) : '';
   const params = new URLSearchParams(hash);
-const refreshToken = params.get('refresh_token') || '';
-const accessToken = params.get('access_token') || '';
+  const refreshToken = params.get('refresh_token') || '';
+  const accessToken = params.get('access_token') || '';
   const error = params.get('error');
   return (
     <div>

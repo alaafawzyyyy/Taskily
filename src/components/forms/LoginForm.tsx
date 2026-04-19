@@ -22,7 +22,7 @@ export default function LoginForm() {
         email: data.email,
         password: data.password,
       });
-      router.replace('/dashboard');
+      router.replace('/');
     } catch (err: any) {
       setError(err.message);
     }

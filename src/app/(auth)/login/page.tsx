@@ -1,5 +1,5 @@
-import LoginForm from '../../components/forms/LoginForm';
-import Logo from '../../components/Logo';
+import LoginForm from '../../../components/forms/LoginForm';
+import Logo from '../../../components/Logo';
 export default function Signup() {
   return (
       <div >

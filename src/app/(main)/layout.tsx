@@ -23,6 +23,7 @@ export default function Home({children}) {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
+        <main>{children}</main>
       </div>
     </div>
   ) : (
@@ -34,6 +35,7 @@ export default function Home({children}) {
 
       <div className="flex flex-col flex-1">
         <Navbar isOpen={isOpen} />
+        <main>{children}</main>
       </div>
     </div>
   );
