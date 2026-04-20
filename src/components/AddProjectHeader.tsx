@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import addMember from '../../public/assets/icons/addMember.svg';
 import space from '../../public/assets/icons/space.svg';
@@ -21,16 +22,15 @@ export function AddProjectHeader() {
           add new project
         </p>
       </div>
-      <button className="flex items-center h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
-        <Image
-          src={addMember}
-          alt="add member icon"
-          className=""
-        />
-        <p className="h-20px font-bold text-[14px] leading-5 text-white">
-          Invite Member
-        </p>
-      </button>
+        <button className="flex items-center h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
+          <Image
+            src={addMember}
+            alt="add member icon"
+          />
+          <p className="h-20px font-bold text-[14px] leading-5 text-white">
+            Invite Member
+          </p>
+        </button>
     </div>
   );
 }

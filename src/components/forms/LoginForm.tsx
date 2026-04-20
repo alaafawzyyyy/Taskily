@@ -22,7 +22,7 @@ export default function LoginForm() {
         email: data.email,
         password: data.password,
       });
-      router.replace('/');
+      router.replace('/project');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unexpected error';
       setError(message);

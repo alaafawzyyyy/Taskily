@@ -26,7 +26,7 @@ export default function Home({ children }: childrenProps) {
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-[#F1F3FF] z-[50] p-4 md:hidden">
+          <div className="fixed h-full w-[80%] max-w-[300px] bg-[#F1F3FF] z-[50] p-4 md:hidden">
             <Sidebar
               isOpen={true}
               setIsOpen={setIsOpen}
@@ -47,7 +47,7 @@ export default function Home({ children }: childrenProps) {
               setIsOpen={setIsOpen}
             />
 
-            <main className="flex-col flex flex-1 items-center pb-16 w-full">
+            <main className="flex-col flex flex-1 items-center w-full">
               {children}
             </main>
           </div>
