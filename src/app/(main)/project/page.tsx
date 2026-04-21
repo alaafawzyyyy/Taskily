@@ -17,18 +17,29 @@ export default function Project() {
   const [cards, setCards] = useState<cardDetailsType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [Error, setError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState<number>(0);
+  const limit = 5;
 
   const router = useRouter();
   // fetching the projects
   const fetchProjects = async () => {
     try {
+      const offset = (currentPage - 1) * limit;
       setIsLoading(true);
       setError(false);
-      const res = await ShowProjectAPI();
-      
+      const res = await ShowProjectAPI({ limit, offset });
+      const contentRange = res.res?.headers.get('content-range');
+      let totall: number = 0;
+
+      if (contentRange) {
+        totall = Number(contentRange.split('/')[1]);
+        setTotal(totall);
+      }
+
       if (res.ok && res.data) {
         setCards(
-          res.data.slice(0, 5).map((item: cardDetailsType) => ({
+          res.data.map((item: cardDetailsType) => ({
             name: item.name,
             description: item.description,
             created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
@@ -53,10 +64,14 @@ export default function Project() {
     }
   };
 
+  const totalPages:number = Math.ceil(total / limit);
+
+  // Call the api with rendering
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [currentPage]);
 
+  // Check loading
   if (isLoading) {
     return (
       <div className="flex flex-col p-6 gap-6 md:py-8 md:gap-10 pb-20 md:pb-8 justify-between">
@@ -68,6 +83,8 @@ export default function Project() {
         </div>
       </div>
     );
+
+    // check error
   } else if (Error) return <ProjectErrorPage retry={fetchProjects} />;
 
   return cards.length === 0 && !isLoading ? (
@@ -84,7 +101,11 @@ export default function Project() {
         ))}
         <AddProjectCard />
       </div>
-      <ProjectFooter />
+      <ProjectFooter
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
       <Link
         href="/project/add"
         className="flex justify-end items-center"

@@ -46,16 +46,25 @@ export async function AddProjectAPI(data: ProjectData) {
 }
 
 // Get projects API
-export async function ShowProjectAPI() {
+type prop = {
+  limit: number;
+  offset: number;
+};
+
+export async function ShowProjectAPI({ limit, offset }: prop) {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_projects`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        apikey: SUPABASE_ANON_KEY!,
-        'Content-Type': 'application/json',
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/get_projects?limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+          Prefer: 'count=exact',
+        },
       },
-    });
+    );
     let data = null;
     try {
       data = await res.json();
@@ -66,6 +75,7 @@ export async function ShowProjectAPI() {
       status: res.status,
       data,
       error: res.ok ? null : data?.message || 'Request failed',
+      res,
     };
   } catch (err: unknown) {
     return {
