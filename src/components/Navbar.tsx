@@ -9,7 +9,7 @@ import { setUser } from '../store/slices/userslices';
 import { RootState } from '../store/index';
 type typeopen = {
   isOpen: boolean;
-  setIsOpen: any;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function Navbar({ isOpen, setIsOpen }: typeopen) {
