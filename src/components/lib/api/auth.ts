@@ -97,8 +97,7 @@ export async function sendResetLink(email: string) {
 
 // reset password
 
-export async function resetPassword(password: string) {
-  const accessToken = getCookie('access_token');
+export async function resetPassword(password: string, accessToken: string) {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
     method: 'PUT',
     headers: {
