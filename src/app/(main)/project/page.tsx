@@ -9,16 +9,23 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ShowProjectAPI } from '@/components/lib/api/ProjectAPI';
 import { NoProjects } from '@/components/NoProjects';
-import router from 'next/router';
-import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { SkeletonCard } from '@/components/SkeletonCard';
+import { ProjectErrorPage } from '@/components/ProjectErrorPage';
 
 export default function Project() {
   const [cards, setCards] = useState<cardDetailsType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [Error, setError] = useState(false);
 
-  useEffect(() => {
-    const fetchprojects = async () => {
+  const router = useRouter();
+  // fetching the projects
+  const fetchProjects = async () => {
+    try {
+      setIsLoading(true);
+      setError(false);
       const res = await ShowProjectAPI();
-
+      
       if (res.ok && res.data) {
         setCards(
           res.data.slice(0, 5).map((item: cardDetailsType) => ({
@@ -32,15 +39,38 @@ export default function Project() {
           })),
         );
       } else if (res.status === 401) {
+        setError(false);
         router.push('/login');
+        return;
       } else {
-        toast.error(`Failed to create project: ${res.error}`);
+        setError(true);
+        console.log(res.error);
       }
-    };
-    fetchprojects();
+    } catch {
+      setError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
   }, []);
 
-  return cards.length === 0 ? (
+  if (isLoading) {
+    return (
+      <div className="flex flex-col p-6 gap-6 md:py-8 md:gap-10 pb-20 md:pb-8 justify-between">
+        <ProjectHeader isLoading={isLoading} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-8 w-full">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  } else if (Error) return <ProjectErrorPage retry={fetchProjects} />;
+
+  return cards.length === 0 && !isLoading ? (
     <NoProjects />
   ) : (
     <div className="flex flex-col p-6 gap-6 md:py-8 md:gap-10 pb-20 md:pb-8 justify-between">
