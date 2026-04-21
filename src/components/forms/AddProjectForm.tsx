@@ -6,7 +6,7 @@ import protip from '../../../public/assets/icons/protip .svg';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import z from 'zod';
-import { AddProjectAPI } from '../lib/api/AddProjectAPI';
+import { AddProjectAPI } from '../lib/api/ProjectAPI';
 import toast from 'react-hot-toast';
 
 // React Form Hook and Validation
@@ -48,7 +48,7 @@ export function AddProjectForm() {
     if (answer.ok == true) {
       toast.success('Project created successfully');
       reset();
-    } else toast.error(`Failed to create project: ${(answer.error)}`);
+    } else toast.error(`Failed to create project: ${answer.error}`);
   };
 
   return (

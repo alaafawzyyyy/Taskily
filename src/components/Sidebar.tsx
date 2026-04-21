@@ -42,7 +42,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       <nav className="flex flex-col gap-1 flex-1 ">
         {/* Projects */}
         <Link
-          href=""
+          href="/project"
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 bg-[#FFFFFF]"
         >
           <Image
