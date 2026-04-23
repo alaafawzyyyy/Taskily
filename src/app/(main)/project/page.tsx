@@ -6,7 +6,7 @@ import { ProjectHeader } from '@/components/ProjectsHeader';
 import Image from 'next/image';
 import plus from '../../../../public/assets/icons/plus.svg';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ShowProjectAPI } from '@/components/lib/api/ProjectAPI';
 import { NoProjects } from '@/components/NoProjects';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,11 @@ export default function Project() {
   const [Error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
   const limit = 5;
 
   const router = useRouter();
@@ -26,7 +31,13 @@ export default function Project() {
   const fetchProjects = async () => {
     try {
       const offset = (currentPage - 1) * limit;
-      setIsLoading(true);
+      
+      if (currentPage === 1) {
+        setIsLoading(true);
+      } else {
+        setIsLoadingMore(true);
+      }
+
       setError(false);
       const res = await ShowProjectAPI({ limit, offset });
       const contentRange = res.res?.headers.get('content-range');
@@ -38,17 +49,25 @@ export default function Project() {
       }
 
       if (res.ok && res.data) {
-        setCards(
-          res.data.map((item: cardDetailsType) => ({
-            name: item.name,
-            description: item.description,
-            created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            }),
-          })),
-        );
+        const newData = res.data.map((item: cardDetailsType) => ({
+          name: item.name,
+          description: item.description,
+          created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          }),
+        }));
+        // showing the whole pages for mobiles and the selected page for desktop
+        if (isMobile) {
+          if (currentPage === 1) {
+            setCards(newData);
+          } else {
+            setCards((prev) => [...prev, ...newData]);
+          }
+        } else {
+          setCards(newData);
+        }
       } else if (res.status === 401) {
         setError(false);
         router.push('/login');
@@ -61,6 +80,7 @@ export default function Project() {
       setError(true);
     } finally {
       setIsLoading(false);
+      setIsLoadingMore(false);
     }
   };
 
@@ -70,6 +90,43 @@ export default function Project() {
   useEffect(() => {
     fetchProjects();
   }, [currentPage]);
+
+  // checking mobile to activate the infinite scroll
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+
+    const handleChange = () => setIsMobile(media.matches);
+
+    handleChange();
+    media.addEventListener('change', handleChange);
+
+    return () => media.removeEventListener('change', handleChange);
+  }, []);
+
+  // checking the element for fetching new pages in infinite scrolling
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+
+      if (
+        entry.isIntersecting &&
+        !isLoading &&
+        !isLoadingMore &&
+        currentPage < totalPages
+      ) {
+        setCurrentPage((prev) => prev + 1);
+      }
+    });
+
+    observer.observe(loadMoreRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [currentPage, isLoading, isLoadingMore, totalPages, isMobile]);
 
   // Check loading
   if (isLoading) {
@@ -108,7 +165,7 @@ export default function Project() {
       />
       <Link
         href="/project/add"
-        className="flex justify-end items-center"
+        className="fixed bottom-20 right-6 md:hidden z-50"
       >
         <div className="md:hidden flex justify-center rounded-xl items-center w-14 h-14 bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
           <Image
@@ -117,6 +174,12 @@ export default function Project() {
           />
         </div>
       </Link>
+      
+      <div className="block md:hidden">
+        {isLoadingMore && <p className="text-center py-4">Loading...</p>}
+
+        <div ref={loadMoreRef}></div>
+      </div>{' '}
     </div>
   );
 }
