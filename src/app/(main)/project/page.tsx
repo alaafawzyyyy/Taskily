@@ -52,12 +52,14 @@ export default function Project() {
         const newData = res.data.map((item: cardDetailsType) => ({
           name: item.name,
           description: item.description,
+          id:item.id,
           created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
           }),
         }));
+        
         // showing the whole pages for mobiles and the selected page for desktop
         if (isMobile) {
           if (currentPage === 1) {
@@ -83,7 +85,6 @@ export default function Project() {
       setIsLoadingMore(false);
     }
   };
-
   const totalPages:number = Math.ceil(total / limit);
 
   // Call the api with rendering

@@ -6,18 +6,22 @@ import epic from '../../public/assets/icons/epics.svg';
 import tasks from '../../public/assets/icons/tasks.svg';
 import details from '../../public/assets/icons/details.svg';
 import members from '../../public/assets/icons/members.svg';
+import { useParams } from 'next/navigation';
 
 type typeopen = {
   isOpen: boolean;
 };
 
 export function SidebarMenu({ isOpen }: typeopen) {
+  const params = useParams();
+  const projectId = params?.projectId;
+
   return (
     <div
-    className={`${isOpen ?'hidden': 'fixed bottom-0 left-0  w-full h-16 bg-white border-t flex pr-[27.86px] pl-[27.83px] gap-[39.7px] md:hidden'}`}
+      className={`${isOpen ? 'hidden' : 'fixed bottom-0 left-0  w-full h-16 bg-white border-t flex pr-[27.86px] pl-[27.83px] gap-[39.7px] md:hidden'} `}
     >
       <Link
-        href=""
+        href="/project"
         className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
       >
         <Image
@@ -28,7 +32,10 @@ export function SidebarMenu({ isOpen }: typeopen) {
       </Link>
       {/* Project Epics */}
       <Link
-        href=""
+        href={projectId ? `/project/${projectId}/epics` : '#'}
+        onClick={(e) => {
+          if (!projectId) e.preventDefault();
+        }}
         className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
       >
         <Image
@@ -39,7 +46,10 @@ export function SidebarMenu({ isOpen }: typeopen) {
       </Link>
       {/* Project Tasks */}
       <Link
-        href=""
+        href={projectId ? `/project/${projectId}/tasks` : '#'}
+        onClick={(e) => {
+          if (!projectId) e.preventDefault();
+        }}
         className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 "
       >
         <Image
@@ -50,7 +60,10 @@ export function SidebarMenu({ isOpen }: typeopen) {
       </Link>
       {/* Project Members */}
       <Link
-        href=""
+        href={projectId ? `/project/${projectId}/members` : '#'}
+        onClick={(e) => {
+          if (!projectId) e.preventDefault();
+        }}
         className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
       >
         <Image
@@ -61,7 +74,10 @@ export function SidebarMenu({ isOpen }: typeopen) {
       </Link>
       {/* Project Dtails */}
       <Link
-        href=""
+        href={projectId ? `/project/${projectId}/edit` : '#'}
+        onClick={(e) => {
+          if (!projectId) e.preventDefault();
+        }}
         className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
       >
         <Image

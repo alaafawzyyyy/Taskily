@@ -12,12 +12,16 @@ import Logout from '../../public/assets/icons/logout.svg';
 import { clearUser } from '../store/slices/userslices';
 import { useDispatch } from 'react-redux';
 import { logout } from '../components/lib/api/auth';
+import { useParams } from 'next/navigation';
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const dispatch = useDispatch();
+
+  const params = useParams();
+  const projectId = params?.projectId;
 
   const handleLogout = async () => {
     try {
@@ -31,7 +35,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   };
   return (
     <div
-      className={`md:flex flex-col  p-4 h-[1024px] ${isOpen ? 'w-[256px]'  : 'hidden md:w-20'} bg-[#F1F3FF]`}
+      className={`md:flex flex-col  p-4 h-[1024px] ${isOpen ? 'w-[256px]' : 'hidden md:w-20'} bg-[#F1F3FF]`}
     >
       {/* Logo */}
       <div>
@@ -39,7 +43,11 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       </div>
 
       {/* Links */}
-      <nav className="flex flex-col gap-1 flex-1 ">
+      <nav
+        className={`${
+          !projectId ? 'pointer-events-none' : ''
+        } flex flex-col gap-1 flex-1`}
+      >
         {/* Projects */}
         <Link
           href="/project"
@@ -54,7 +62,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </Link>
         {/* Project Epics */}
         <Link
-          href=""
+          href={projectId ? `/project/${projectId}/epics` : '#'}
+          onClick={(e) => {
+            if (!projectId) e.preventDefault();
+          }}
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
         >
           <Image
@@ -68,7 +79,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </Link>
         {/* Project Tasks */}
         <Link
-          href=""
+          href={projectId ? `/project/${projectId}/tasks` : '#'}
+          onClick={(e) => {
+            if (!projectId) e.preventDefault();
+          }}
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 "
         >
           <Image
@@ -82,7 +96,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </Link>
         {/* Project Members */}
         <Link
-          href=""
+          href={projectId ? `/project/${projectId}/members` : '#'}
+          onClick={(e) => {
+            if (!projectId) e.preventDefault();
+          }}
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
         >
           <Image
@@ -96,7 +113,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </Link>
         {/* Project Dtails */}
         <Link
-          href=""
+          href={projectId ? `/project/${projectId}/edit` : '#'}
+          onClick={(e) => {
+            if (!projectId) e.preventDefault();
+          }}
           className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
         >
           <Image

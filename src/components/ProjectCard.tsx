@@ -1,16 +1,23 @@
-'useClient'
+'useClient';
 import Image from 'next/image';
 import date from '../../public/assets/icons/date.svg';
+import { useRouter } from 'next/navigation';
 
 export type cardDetailsType = {
   name: string;
   description: string;
   created_at: string;
+  id: string;
 };
 
 export default function ProjectCard({ data }: { data: cardDetailsType }) {
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col md:gap-6 gap-10 md:min-h-[220px] bg-[#FFFFFF] md:p-6 justify-between rounded-lg p-4 pb-6 min-w-[342px] min-h-[212px] md:min-w-[304px] ">
+    <div
+      onClick={() => router.push(`/project/${data.id}/epics`)}
+      className=" cursor-pointer flex flex-col md:gap-6 gap-10 md:min-h-[220px] bg-[#FFFFFF] md:p-6 justify-between rounded-lg p-4 pb-6 min-w-[342px] min-h-[212px] md:min-w-[304px] "
+    >
       {/* name */}
       <div className="flex flex-col md:gap-2 gap-6">
         <p className="font-semibold text-[18px] leading-[24.75px] md:leading-[28px] md:font-medium text-[#041B3C]">
