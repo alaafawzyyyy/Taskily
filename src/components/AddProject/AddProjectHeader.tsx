@@ -14,7 +14,10 @@ export function AddProjectHeader() {
             alt="space icon"
             head="projects"
           />
-          <Path head="add new project" />
+          <Path
+            head="add new project"
+            color="#003D9B"
+          />
         </div>
         <p className="capitalize font-semibold text-[36px] leading-10 -tracking-[0.9px] ">
           add new project{' '}

@@ -64,7 +64,9 @@ export default function Home({ children }: childrenProps) {
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
               />
-              <main className="w-full">{children}</main>
+              <main className="flex-1 flex justify-center w-full">
+                <div className="w-full max-w-[1024px]">{children}</div>
+              </main>
             </div>
           </div>
         </div>
@@ -72,7 +74,6 @@ export default function Home({ children }: childrenProps) {
       <div>
         <SidebarMenu isOpen={isOpen} />
       </div>
-    
     </>
   );
 }

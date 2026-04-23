@@ -7,7 +7,7 @@ type button={
 }
 export function CreateButton({ src, alt, text }: button) {
   return (
-    <button className="flex items-center h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
+    <button className="hidden md:flex items-center h-[44px] py-3 px-6 gap-2 rounded-sm bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
       <Image
         src={src}
         alt={alt}

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import addproject from '../../public/assets/icons/addproject.svg';
+import addproject from '../../../public/assets/icons/addproject.svg';
 import Link from 'next/link';
 
 export default function AddProjectCard() {

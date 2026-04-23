@@ -1,5 +1,5 @@
 'use client';
-import { AddProjectHeader } from '@/components/projects/AddProjectHeader';
+import { AddProjectHeader } from '@/components/AddProject/AddProjectHeader';
 import { AddProjectForm, formType } from '@/components/forms/ProjectForm';
 import { getProjectById } from '@/components/lib/api/ProjectAPI';
 import { useParams } from 'next/navigation';

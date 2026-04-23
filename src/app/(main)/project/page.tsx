@@ -1,8 +1,10 @@
 'use client';
-import AddProjectCard from '@/components/AddProjectCard';
-import ProjectCard, { cardDetailsType } from '@/components/projects/ProjectCard';
-import ProjectFooter from '@/components/projects/ProjectsFooter';
-import { ProjectHeader } from '@/components/projects/ProjectsHeader';
+import AddProjectCard from '@/components/showProjects/AddProjectCard';
+import ProjectCard, {
+  cardDetailsType,
+} from '@/components/showProjects/ProjectCard';
+import ProjectFooter from '@/components/showProjects/ProjectsFooter';
+import { ProjectHeader } from '@/components/showProjects/ProjectsHeader';
 import Image from 'next/image';
 import plus from '../../../../public/assets/icons/plus.svg';
 import Link from 'next/link';
@@ -10,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ShowProjectAPI } from '@/components/lib/api/ProjectAPI';
 import { NoProjects } from '@/components/NoProjects';
 import { useRouter } from 'next/navigation';
-import { SkeletonCard } from '@/components/projects/SkeletonCard';
+import { SkeletonCard } from '@/components/showProjects/SkeletonCard';
 import { ProjectErrorPage } from '@/components/ProjectErrorPage';
 
 export default function Project() {
