@@ -1,4 +1,4 @@
-import PaginationButton from './ui/paginationButton';
+import PaginationButton from '../ui/paginationButton';
 
 type props = {
   currentPage: number;

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import plus from '../../public/assets/icons/plus.svg';
+import plus from '../../../public/assets/icons/plus.svg';
 import Link from 'next/link';
 
 export function ProjectHeader({ isLoading }: { isLoading?: boolean }) {

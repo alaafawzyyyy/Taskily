@@ -1,6 +1,6 @@
 'useClient';
 import Image from 'next/image';
-import date from '../../public/assets/icons/date.svg';
+import date from '../../../public/assets/icons/date.svg';
 import { useRouter } from 'next/navigation';
 
 export type cardDetailsType = {

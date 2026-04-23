@@ -1,8 +1,8 @@
 'use client';
 import AddProjectCard from '@/components/AddProjectCard';
-import ProjectCard, { cardDetailsType } from '@/components/ProjectCard';
-import ProjectFooter from '@/components/ProjectsFooter';
-import { ProjectHeader } from '@/components/ProjectsHeader';
+import ProjectCard, { cardDetailsType } from '@/components/projects/ProjectCard';
+import ProjectFooter from '@/components/projects/ProjectsFooter';
+import { ProjectHeader } from '@/components/projects/ProjectsHeader';
 import Image from 'next/image';
 import plus from '../../../../public/assets/icons/plus.svg';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ShowProjectAPI } from '@/components/lib/api/ProjectAPI';
 import { NoProjects } from '@/components/NoProjects';
 import { useRouter } from 'next/navigation';
-import { SkeletonCard } from '@/components/SkeletonCard';
+import { SkeletonCard } from '@/components/projects/SkeletonCard';
 import { ProjectErrorPage } from '@/components/ProjectErrorPage';
 
 export default function Project() {
@@ -31,7 +31,7 @@ export default function Project() {
   const fetchProjects = async () => {
     try {
       const offset = (currentPage - 1) * limit;
-      
+
       if (currentPage === 1) {
         setIsLoading(true);
       } else {
@@ -52,14 +52,14 @@ export default function Project() {
         const newData = res.data.map((item: cardDetailsType) => ({
           name: item.name,
           description: item.description,
-          id:item.id,
+          id: item.id,
           created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
           }),
         }));
-        
+
         // showing the whole pages for mobiles and the selected page for desktop
         if (isMobile) {
           if (currentPage === 1) {
@@ -85,7 +85,7 @@ export default function Project() {
       setIsLoadingMore(false);
     }
   };
-  const totalPages:number = Math.ceil(total / limit);
+  const totalPages: number = Math.ceil(total / limit);
 
   // Call the api with rendering
   useEffect(() => {
@@ -175,9 +175,10 @@ export default function Project() {
           />
         </div>
       </Link>
-      
       <div className="block md:hidden">
-        {isLoadingMore && <p className="flex justify-center items-center py-4">Loading...</p>}
+        {isLoadingMore && (
+          <p className="flex justify-center items-center py-4">Loading...</p>
+        )}
 
         <div ref={loadMoreRef}></div>
       </div>{' '}
