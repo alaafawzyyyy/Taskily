@@ -6,8 +6,9 @@ import protip from '../../../public/assets/icons/protip .svg';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import z from 'zod';
-import { AddProjectAPI } from '../lib/api/ProjectAPI';
+import { AddProjectAPI, PatchProject } from '../lib/api/ProjectAPI';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 // React Form Hook and Validation
 const addProjectSchema = z.object({
@@ -21,16 +22,31 @@ const addProjectSchema = z.object({
     .optional(),
 });
 
-type formType = z.infer<typeof addProjectSchema>;
+export type formType = z.infer<typeof addProjectSchema>;
 
-export function AddProjectForm() {
+export function AddProjectForm({
+  initialData,
+  projectId,
+}: {
+  initialData?: formType;
+  projectId?: string;
+}) {
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors },
-  } = useForm<formType>({ resolver: zodResolver(addProjectSchema) });
+    formState: { errors, isDirty },
+  } = useForm<formType>({
+    resolver: zodResolver(addProjectSchema),
+    defaultValues: {
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+    },
+  });
+  const router = useRouter();
+
+
 
   const description = useWatch({
     control,
@@ -40,14 +56,28 @@ export function AddProjectForm() {
   const descriptionLength = (description ?? '').length;
 
   const submitForm = async (data: formType) => {
-    const answer = await AddProjectAPI({
-      name: data.name,
-      description: data.description,
-    });
+    let answer;
 
-    if (answer.ok == true) {
-      toast.success('Project created successfully');
+    if (projectId) {
+      answer = await PatchProject({
+        data,
+        projectId,
+      });
+    } else {
+      answer = await AddProjectAPI({
+        name: data.name,
+        description: data.description,
+      });
+    }
+
+    if (answer.ok) {
+      toast.success(
+        projectId
+          ? 'Project updated successfully'
+          : 'Project created successfully',
+      );
       reset();
+      router.push('/project');
     } else toast.error(`Failed to create project: ${answer.error}`);
   };
 
@@ -138,11 +168,18 @@ export function AddProjectForm() {
 
           {/* Cancel && Create */}
           <div className="flex-col md:flex-row flex justify-between md:py-4 pt-4 gap-1">
-            <button className="order-2 rounded-[8px] md:rounded-[4px] py-3 px-6 text-[14px] font-bold leading-5 text-[#4F5F7B] ">
+            <button
+              onClick={() => router.push('/project')}
+              type="button"
+              className="order-1 rounded-[8px] md:rounded-[4px] py-3 px-6 text-[14px] font-bold leading-5 text-[#4F5F7B] "
+            >
               Cancel
             </button>
-            <button className="order-1 rounded-[8px] md:rounded-[4px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
-              Create Project
+            <button
+              disabled={!isDirty}
+              className="order-2 rounded-[8px] md:rounded-[4px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-gradient-to-b from-[#003D9B] to-[#0052CC]"
+            >
+              {projectId ? 'Save' : 'Create Project'}
             </button>
           </div>
         </div>

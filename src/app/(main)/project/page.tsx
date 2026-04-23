@@ -177,7 +177,7 @@ export default function Project() {
       </Link>
       
       <div className="block md:hidden">
-        {isLoadingMore && <p className="text-center py-4">Loading...</p>}
+        {isLoadingMore && <p className="flex justify-center items-center py-4">Loading...</p>}
 
         <div ref={loadMoreRef}></div>
       </div>{' '}

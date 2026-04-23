@@ -20,9 +20,21 @@ export default function ProjectCard({ data }: { data: cardDetailsType }) {
     >
       {/* name */}
       <div className="flex flex-col md:gap-2 gap-6">
-        <p className="font-semibold text-[18px] leading-[24.75px] md:leading-[28px] md:font-medium text-[#041B3C]">
-          {data.name}
-        </p>
+        <div className="flex justify-between items-center">
+          <p className="font-semibold text-[18px] leading-[24.75px] md:leading-[28px] md:font-medium text-[#041B3C]">
+            {data.name}
+          </p>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/project/${data.id}/edit`);
+            }}
+            className="text-sm text-blue-600"
+          >
+            ✏️
+          </button>
+        </div>
+        
         {/* description */}
         <p className="text-[14px] leading-[22.75px] text-[#434654]">
           {data.description}

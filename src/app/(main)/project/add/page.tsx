@@ -1,5 +1,5 @@
 import { AddProjectHeader } from '@/components/AddProjectHeader';
-import { AddProjectForm } from '@/components/forms/AddProjectForm';
+import { AddProjectForm } from '@/components/forms/ProjectForm';
 
 export default function Projects() {
   return (

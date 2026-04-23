@@ -43,11 +43,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       </div>
 
       {/* Links */}
-      <nav
-        className={`${
-          !projectId ? 'pointer-events-none' : ''
-        } flex flex-col gap-1 flex-1`}
-      >
+      <nav className="flex flex-col gap-1 flex-1">
         {/* Projects */}
         <Link
           href="/project"
