@@ -23,7 +23,7 @@ export default function ProjectFooter({
   return (
     <div className=" hidden px-2 pt-12 md:flex justify-between items-center">
       <p className="text-[#434654] text-[12px] leading-4 font-medium ">
-        Showing 5 of 24 active projects
+        Showing {currentPage} of {totalPages} active projects
       </p>
       <div className="flex gap-2">
         <PaginationButton

@@ -1,7 +1,7 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { CreateEbic } from '../lib/api/ebics';
+import { CreateEbic } from '../lib/api/epics';
 import { useEffect, useState } from 'react';
 import { getProjectMembers } from '../lib/api/ProjectAPI';
 import { z } from 'zod';
@@ -33,7 +33,7 @@ export const createEpicSchema = z.object({
 });
 type FormData = z.infer<typeof createEpicSchema>;
 
-export function CreateEbicForm() {
+export function CreateEpicForm() {
   const router = useRouter();
   const [members, setMembers] = useState<Member[]>([]);
   const params = useParams();
