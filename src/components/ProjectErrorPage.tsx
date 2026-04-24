@@ -4,8 +4,9 @@ import internetno from '../../public/assets/icons/internetno.svg';
 
 type Props = {
   retry: () => void;
+  message:string
 };
-export function ProjectErrorPage({retry}: Props) {
+export function ProjectErrorPage({retry, message}: Props) {
 
   return (
     <div className="flex flex-col gap-[43px] justify-center items-center pt-20">
@@ -19,8 +20,7 @@ export function ProjectErrorPage({retry}: Props) {
           Something went wrong
         </p>
         <p className="capitalize text-[18px] leading-[29.25px] text-[#434654] max-w-[448px] text-center">
-          We&apos;re having trouble retrieving your projects right now. Please
-          try again in a moment.
+         {message}
         </p>
       </div>
       <button

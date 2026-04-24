@@ -145,7 +145,13 @@ export default function Project() {
     );
 
     // check error
-  } else if (Error) return <ProjectErrorPage retry={fetchProjects} />;
+  } else if (Error)
+    return (
+      <ProjectErrorPage
+        retry={fetchProjects}
+        message="We're having trouble retrieving your projects right now. Please try again in a moment."
+      />
+    );
 
   return cards.length === 0 && !isLoading ? (
     <NoProjects />
