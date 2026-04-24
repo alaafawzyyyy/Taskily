@@ -166,3 +166,37 @@ export async function getProjectById({ projectId }: { projectId: string }) {
     };
   }
 }
+
+// fetch project members
+export async function getProjectMembers({ projectId }: { projectId: string }) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/get_project_members?project_id=eq.${projectId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
+    return {
+      ok: res.ok,
+      status: res.status,
+      data,
+      error: res.ok ? null : data?.message || 'Request failed',
+    };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      status: 0,
+      data: null,
+      error: err instanceof Error ? err.message : 'Network error',
+    };
+  }
+}

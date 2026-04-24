@@ -1,38 +1,24 @@
-export function MembersRow() {
-  const members = [
-    {
-      email: 'alaa.shaaban943@getMaxListeners.com',
-      initials: 'AF',
-      name: 'Alaa Fawzy',
-      role: 'software',
-      date: '4 9 2003',
-    },
-    {
-      email: 'alaa.shaaban94@getMaxListeners.com',
-      initials: 'AF',
-      name: 'Alaa Fawzy',
-      role: 'software',
-      date: '4 9 2003',
-    },
-    {
-      email: 'alaa.shaaban43@getMaxListeners.com',
-      initials: 'AF',
-      name: 'Alaa Fawzy',
-      role: 'software',
-      date: '4 9 2003',
-    },
-  ];
+export type memberData = {
+  email: string;
+  name: string;
+  role: string;
+  date: string;
+  initials: string;
+};
 
+type MembersRowProps = {
+  data: memberData[];
+};
+export function MembersRow({ data }: MembersRowProps) {
   return (
     <div className="flex flex-col w-full border-[2px] border-[#F1F3FF] rounded-lg">
-      <div className="hidden md:grid grid-cols-[2fr_1.5fr_1fr_0.5fr] items-center px-6 py-4 text-[11px] tracking-[1.1px] uppercase font-bold text-[#434654]">
+      <div className="hidden md:grid grid-cols-[2fr_1fr_0.5fr] items-center px-6 py-4 text-[11px] tracking-[1.1px] uppercase font-bold text-[#434654]">
         <div>MEMBER</div>
         <div>ROLE</div>
-        <div>JOINED AT</div>
         <div className="text-right">ACTIONS</div>
       </div>
 
-      {members.map((m) => (
+      {data.map((m) => (
         <div
           key={m.email}
           className="
@@ -68,7 +54,7 @@ export function MembersRow() {
           <div
             className="
       hidden md:grid
-      md:grid-cols-[2fr_1.5fr_1fr_0.5fr]
+      md:grid-cols-[2fr_1fr_0.5fr]
       items-center
     "
           >
@@ -91,9 +77,6 @@ export function MembersRow() {
                 {m.role}
               </span>
             </div>
-
-            <div className="text-sm text-gray-600">{m.date}</div>
-
             <div className="flex justify-end">⋮</div>
           </div>
         </div>
