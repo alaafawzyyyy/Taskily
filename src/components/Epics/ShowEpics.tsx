@@ -37,7 +37,7 @@ const [epics, setEpics] = useState<Epic[]>([]);
 
   return (
     <>
-      <div className="grid md:grid-cols-2 grid-cols-1 md:grid-rows-3 gap-6">
+      <div className="grid md:grid-cols-2 grid-cols-1 md:grid-rows-3 gap-6 mb-24 md:mb-0">
         {epics?.slice(0, 6).map((epic) => (
           <EpicCard
             key={epic.id}

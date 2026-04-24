@@ -59,13 +59,13 @@ export default function Home({ children }: childrenProps) {
               isOpen={isOpen}
               setIsOpen={setIsOpen}
             />
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 w-full">
               <Navbar
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
               />
-              <main className="flex-1 flex justify-center w-full">
-                <div className="w-full max-w-[1024px]">{children}</div>
+              <main className="flex-1 flex justify-center w-full px-5">
+                <div className="w-full">{children}</div>
               </main>
             </div>
           </div>
