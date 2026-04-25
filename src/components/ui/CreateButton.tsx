@@ -4,7 +4,7 @@ type button = {
   src: string;
   alt: string;
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
 export function CreateButton({ src, alt, text, onClick }: button) {
   return (
