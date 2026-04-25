@@ -93,3 +93,32 @@ export async function GetEpics({ projectId, limit, offset }: prop) {
     };
   }
 }
+
+type GetEpicDetailsProps = {
+  projectId: string;
+  selectedEpicId: string;
+};
+// get epic details
+export async function GetEpicDetails({
+  projectId,
+  selectedEpicId,
+}: GetEpicDetailsProps) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}&id=eq.${selectedEpicId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const data = await res.json();
+
+    return data[0];
+  } catch (err) {
+    console.log(err);
+  }
+}

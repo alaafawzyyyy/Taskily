@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Epic, EpicCard } from './EpicCard';
 import { useParams, useRouter } from 'next/navigation';
-import { GetEpics } from '../lib/api/epics';
+import { GetEpicDetails, GetEpics } from '../lib/api/epics';
 import { ProjectErrorPage } from '../ProjectErrorPage';
 import { NoProjects } from '../NoProjects';
 import Image from 'next/image';
@@ -44,6 +44,9 @@ export function ShowEpics() {
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
+  const [selectedEpic, setSelectedEpic] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -53,6 +56,18 @@ export function ShowEpics() {
   const params = useParams();
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : undefined;
+
+  const fetchDetails = async () => {
+    if (!projectId || !selectedEpicId) return;
+    const data = await GetEpicDetails({ projectId, selectedEpicId });
+    setSelectedEpic(data);
+    console.log(data);
+  };
+  useEffect(() => {
+    if (isModalOpen) {
+      fetchDetails();
+    }
+  }, [isModalOpen, selectedEpicId]);
 
   const fetchEpics = async () => {
     if (!projectId) return;
@@ -188,10 +203,16 @@ export function ShowEpics() {
       <ShowEpicsHeader projectId={projectId} />
       <div className="grid md:grid-cols-2 grid-cols-1 md:grid-rows-3 gap-6 mb-24 md:mb-0">
         {epics?.map((epic) => (
-          <EpicCard
+          <div
             key={epic.id}
-            data={epic}
-          />
+            className="cursor-pointer"
+            onClick={() => {
+              setSelectedEpicId(epic.id);
+              setIsModalOpen(true);
+            }}
+          >
+            <EpicCard data={epic} />
+          </div>
         ))}
       </div>
       <ProjectFooter
