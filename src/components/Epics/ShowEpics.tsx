@@ -16,6 +16,7 @@ import { ShowEpicsHeader } from './ShowEpicsHeader';
 import { SkeletonEpics } from './SkeletonEpics';
 import ProjectFooter from '../showProjects/ProjectsFooter';
 import Link from 'next/link';
+import { Pop, PopUp } from './PopUP';
 
 const footerDate = [
   {
@@ -45,7 +46,7 @@ export function ShowEpics() {
   const [total, setTotal] = useState<number>(0);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
-  const [selectedEpic, setSelectedEpic] = useState<any>(null);
+  const [selectedEpic, setSelectedEpic] = useState<Pop | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -120,11 +121,6 @@ export function ShowEpics() {
     fetchEpics();
   }, [projectId, currentPage]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-    setEpics([]);
-  }, [isMobile]);
-
   // checking mobile to activate the infinite scroll
   useEffect(() => {
     const media = window.matchMedia('(max-width: 767px)');
@@ -167,7 +163,6 @@ export function ShowEpics() {
       />
     );
   }
-
   return epics.length === 0 && !isLoading ? (
     <div className="flex flex-col gap-16 items-center">
       <NoProjects
@@ -234,6 +229,12 @@ export function ShowEpics() {
       <div className="block md:hidden">
         <div ref={loadMoreRef}></div>
       </div>
+      <PopUp
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedEpic={selectedEpic}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 }
