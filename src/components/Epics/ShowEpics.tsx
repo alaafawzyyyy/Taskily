@@ -13,6 +13,7 @@ import velocity from '../../../public/assets/icons/velocity.svg';
 import highgoals from '../../../public/assets/icons/highgoals.svg';
 import { ShowEpicsHeader } from './ShowEpicsHeader';
 import { SkeletonEpics } from './SkeletonEpics';
+import ProjectFooter from '../showProjects/ProjectsFooter';
 
 const footerDate = [
   {
@@ -38,6 +39,10 @@ export function ShowEpics() {
   const [epics, setEpics] = useState<Epic[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState<number>(0);
+
+  const limit = 6;
 
   const router = useRouter();
   const params = useParams();
@@ -48,9 +53,19 @@ export function ShowEpics() {
     if (!projectId) return;
 
     try {
+      const offset = (currentPage - 1) * limit;
+
       setIsLoading(true);
       setError(false);
-      const res = await GetEpics({ projectId });
+      const res = await GetEpics({ projectId, limit, offset });
+      const contentRange = res.res?.headers.get('content-range');
+
+      let totall: number = 0;
+
+      if (contentRange) {
+        totall = Number(contentRange.split('/')[1]);
+        setTotal(totall);
+      }
 
       if (res.status === 401) {
         router.push('/login');
@@ -69,10 +84,11 @@ export function ShowEpics() {
       setIsLoading(false);
     }
   };
+  const totalPages: number = Math.ceil(total / limit);
 
   useEffect(() => {
     fetchEpics();
-  }, [projectId]);
+  }, [projectId, currentPage]);
 
   if (error) {
     return (
@@ -119,15 +135,20 @@ export function ShowEpics() {
     </div>
   ) : (
     <div className="w-full max-w-[1024px] flex flex-col h-full md:gap-16 gap-6 px-3">
-      <ShowEpicsHeader />
+      <ShowEpicsHeader projectId={projectId} />
       <div className="grid md:grid-cols-2 grid-cols-1 md:grid-rows-3 gap-6 mb-24 md:mb-0">
-        {epics?.slice(0, 6).map((epic) => (
+        {epics?.map((epic) => (
           <EpicCard
             key={epic.id}
             data={epic}
           />
-        ))}{' '}
+        ))}
       </div>
+      <ProjectFooter
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

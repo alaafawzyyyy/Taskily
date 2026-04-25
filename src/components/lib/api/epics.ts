@@ -53,21 +53,26 @@ export async function CreateEbic(data: epicData) {
 }
 
 // Get Epics
-export async function GetEpics({ projectId }: { projectId: string }) {
+type prop = {
+  limit: number;
+  offset: number;
+  projectId: string;
+};
+
+export async function GetEpics({ projectId, limit, offset }: prop) {
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}`,
+      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}&limit=${limit}&offset=${offset}`,
       {
-        method: 'Get',
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           apikey: SUPABASE_ANON_KEY!,
           'Content-Type': 'application/json',
+          Prefer: 'count=exact',
         },
       },
     );
-    
-    console.log(res)
     let data = null;
     try {
       data = await res.json();

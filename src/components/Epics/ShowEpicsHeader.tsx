@@ -3,8 +3,13 @@ import space from '../../../public/assets/icons/space.svg';
 import plus from '../../../public/assets/icons/plus.svg';
 import { CreateButton } from '../ui/CreateButton';
 import { Path } from '../ui/Path';
+import { useRouter } from 'next/navigation';
 
-export function ShowEpicsHeader() {
+type Props = {
+  projectId?: string;
+};
+export function ShowEpicsHeader({ projectId }: Props) {
+  const router = useRouter();
   return (
     <div className=" flex h-[64px] md:top-8  justify-between relative items-end w-full">
       <div className="hidden md:flex flex-col gap-4">
@@ -37,6 +42,7 @@ export function ShowEpicsHeader() {
           src={plus}
           alt="Add member icon"
           text="New Epic"
+          onClick={() => router.push(`/project/${projectId}/epics/new`)}
         />
       </div>
     </div>

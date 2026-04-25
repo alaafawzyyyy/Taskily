@@ -31,7 +31,7 @@ export default function ProjectFooter({
           onClick={Prev}
           disabled={currentPage === 1}
         />
-        <PaginationButton number={currentPage} />
+        <PaginationButton number={currentPage} color="#003D9B"/>
         <PaginationButton number={currentPage + 1} />
         <PaginationButton
           number=">"
