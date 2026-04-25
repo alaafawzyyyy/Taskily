@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Epic, EpicCard } from './EpicCard';
 import { useParams, useRouter } from 'next/navigation';
 import { GetEpics } from '../lib/api/epics';
@@ -11,9 +11,11 @@ import createepic from '../../../public/assets/icons/createepic.svg';
 import hierarchy from '../../../public/assets/icons/hierarchy.svg';
 import velocity from '../../../public/assets/icons/velocity.svg';
 import highgoals from '../../../public/assets/icons/highgoals.svg';
+import plus from '../../../public/assets/icons/plus.svg';
 import { ShowEpicsHeader } from './ShowEpicsHeader';
 import { SkeletonEpics } from './SkeletonEpics';
 import ProjectFooter from '../showProjects/ProjectsFooter';
+import Link from 'next/link';
 
 const footerDate = [
   {
@@ -41,6 +43,9 @@ export function ShowEpics() {
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const limit = 6;
 
@@ -57,6 +62,7 @@ export function ShowEpics() {
 
       setIsLoading(true);
       setError(false);
+
       const res = await GetEpics({ projectId, limit, offset });
       const contentRange = res.res?.headers.get('content-range');
 
@@ -70,37 +76,81 @@ export function ShowEpics() {
       if (res.status === 401) {
         router.push('/login');
         return;
-      }
-      if (res.ok) {
+      } else if (res.ok && res.data) {
         const data = res.data;
-        setEpics(data);
+
+        if (isMobile) {
+          if (currentPage === 1) {
+            setEpics(data);
+          } else {
+            setEpics((prev) => [...prev, ...data]);
+          }
+        } else {
+          setEpics(data);
+        }
       } else {
         setError(true);
+        console.log(res.error);
       }
-    } catch (err) {
-      console.log(err);
+    } catch {
       setError(true);
     } finally {
       setIsLoading(false);
     }
   };
+
   const totalPages: number = Math.ceil(total / limit);
 
   useEffect(() => {
     fetchEpics();
   }, [projectId, currentPage]);
 
-  if (error) {
+  useEffect(() => {
+    setCurrentPage(1);
+    setEpics([]);
+  }, [isMobile]);
+
+  // checking mobile to activate the infinite scroll
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+
+    const handleChange = () => setIsMobile(media.matches);
+
+    handleChange();
+    media.addEventListener('change', handleChange);
+
+    return () => media.removeEventListener('change', handleChange);
+  }, []);
+
+  // checking the element for fetching new pages in infinite scrolling
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+
+      if (entry.isIntersecting && !isLoading && currentPage < totalPages) {
+        setCurrentPage((prev) => prev + 1);
+      }
+    });
+
+    observer.observe(loadMoreRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [currentPage, isLoading, totalPages, isMobile]);
+
+  if (isLoading) {
+    return <SkeletonEpics />;
+  } else if (error) {
     return (
       <ProjectErrorPage
         retry={fetchEpics}
         message="We're having trouble retrieving your project epics right now. Please try again in a moment."
       />
     );
-  }
-
-  if (isLoading) {
-    return <SkeletonEpics />;
   }
 
   return epics.length === 0 && !isLoading ? (
@@ -114,7 +164,7 @@ export function ShowEpics() {
         onClick={() => router.push(`/project/${projectId}/epics/new`)}
       />
       <div className="flex gap-6 w-[672px] ">
-        {footerDate.map((data, id) => (
+        {footerDate.slice(0, limit).map((data, id) => (
           <div
             key={id}
             className="bg-[#F1F3FF] p-4 rounded-lg border flex flex-col gap-1"
@@ -149,6 +199,20 @@ export function ShowEpics() {
         currentPage={currentPage}
         totalPages={totalPages}
       />
+      <Link
+        href={`/project/${projectId}/epics/new`}
+        className="fixed bottom-20 right-6 md:hidden z-50"
+      >
+        <div className="md:hidden flex justify-center rounded-xl items-center w-14 h-14 bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
+          <Image
+            src={plus}
+            alt="plus icon"
+          />
+        </div>
+      </Link>
+      <div className="block md:hidden">
+        <div ref={loadMoreRef}></div>
+      </div>
     </div>
   );
 }
