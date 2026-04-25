@@ -7,6 +7,8 @@ import ProjectFooter from '@/components/showProjects/ProjectsFooter';
 import { ProjectHeader } from '@/components/showProjects/ProjectsHeader';
 import Image from 'next/image';
 import plus from '../../../../public/assets/icons/plus.svg';
+import empty from '../../../../public/assets/icons/empty.svg';
+import addproject from '../../../../public/assets/icons/addproject.svg';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { ShowProjectAPI } from '@/components/lib/api/ProjectAPI';
@@ -154,7 +156,14 @@ export default function Project() {
     );
 
   return cards.length === 0 && !isLoading ? (
-    <NoProjects />
+    <NoProjects
+      image={empty}
+      title="No Projects"
+      message="You don’t have any projects yet. Start by defining your first architectural workspace to begin tracking tasks and epics."
+      button="Create New Project"
+      buttonimage={addproject}
+      onClick={() => router.push(`/project/new`)}
+    />
   ) : (
     <div className="flex flex-col p-6 gap-6 md:py-8 md:gap-10 pb-20 md:pb-8 justify-between">
       <ProjectHeader />
