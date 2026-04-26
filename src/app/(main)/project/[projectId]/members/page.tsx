@@ -74,7 +74,7 @@ export default function MembersPage() {
   }
 
   return (
-    <div className="w-full max-w-[1024px] flex flex-col h-full md:gap-20 gap-5">
+    <div className="w-full max-w-[1024px] flex flex-col h-full md:gap-20 gap-5 pb-8">
       <ProjectMemberHeader />
       <MembersRow data={members} />
     </div>

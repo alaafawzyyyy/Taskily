@@ -13,6 +13,8 @@ import { clearUser } from '../store/slices/userslices';
 import { useDispatch } from 'react-redux';
 import { logout } from '../components/lib/api/auth';
 import { useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +22,7 @@ type SidebarProps = {
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const dispatch = useDispatch();
 
+  const pathname = usePathname();
   const params = useParams();
   const projectId = params?.projectId;
 
@@ -35,7 +38,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   };
   return (
     <div
-      className={`md:flex flex-col  p-4 h-[1024px] ${isOpen ? 'w-[256px]' : 'hidden md:w-20'} bg-[#F1F3FF]`}
+      className={`md:flex flex-col  p-4 ${isOpen ? 'w-[256px]' : 'hidden md:w-20'} bg-[#F1F3FF]`}
     >
       {/* Logo */}
       <div>
@@ -47,83 +50,87 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         {/* Projects */}
         <Link
           href="/project"
-          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 bg-[#FFFFFF]"
+          className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
+            pathname === '/project'
+              ? 'bg-white text-[#003D9B]'
+              : 'text-[#041B3C]'
+          } `}
         >
           <Image
             src={project}
             alt="project icon"
             className="w-[21.5px] h-4"
           />
-          {isOpen && <p className="text-[#003D9B] text-[14px]">Projects</p>}
+          {isOpen && <p className="text-[14px]">Projects</p>}
         </Link>
-        {/* Project Epics */}
-        <Link
-          href={projectId ? `/project/${projectId}/epics` : '#'}
-          onClick={(e) => {
-            if (!projectId) e.preventDefault();
-          }}
-          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
-        >
-          <Image
-            src={epic}
-            alt="project icon"
-            className="w-[21.5px] h-4"
-          />
-          {isOpen && (
-            <p className="text-[#041B3C] text-[14px]">Project Epics</p>
-          )}
-        </Link>
-        {/* Project Tasks */}
-        <Link
-          href={projectId ? `/project/${projectId}/tasks` : '#'}
-          onClick={(e) => {
-            if (!projectId) e.preventDefault();
-          }}
-          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3 "
-        >
-          <Image
-            src={tasks}
-            alt="project icon"
-            className="w-[21.5px] h-4"
-          />
-          {isOpen && (
-            <p className="text-[#041B3C] text-[14px]">Project Tasks</p>
-          )}
-        </Link>
-        {/* Project Members */}
-        <Link
-          href={projectId ? `/project/${projectId}/members` : '#'}
-          onClick={(e) => {
-            if (!projectId) e.preventDefault();
-          }}
-          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
-        >
-          <Image
-            src={members}
-            alt="project icon"
-            className="w-[21.5px] h-4"
-          />
-          {isOpen && (
-            <p className="text-[#041B3C] text-[14px]">Project Members</p>
-          )}
-        </Link>
-        {/* Project Dtails */}
-        <Link
-          href={projectId ? `/project/${projectId}/edit` : '#'}
-          onClick={(e) => {
-            if (!projectId) e.preventDefault();
-          }}
-          className="flex items-center rounded-[4px] py-[10px] px-3 gap-3"
-        >
-          <Image
-            src={details}
-            alt="project icon"
-            className="w-[21.5px] h-4"
-          />
-          {isOpen && (
-            <p className="text-[#041B3C] text-[14px]">Project Details</p>
-          )}
-        </Link>
+        {projectId && (
+          <>
+            {/* Project Epics */}
+            <Link
+              href={`/project/${projectId}/epics`}
+              className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
+                pathname.includes('/epics')
+                  ? 'bg-white text-[#003D9B]'
+                  : 'text-[#041B3C]'
+              }`}
+            >
+              <Image
+                src={epic}
+                alt="project icon"
+                className="w-[21.5px] h-4"
+              />
+              {isOpen && <p className="text-[14px]">Project Epics</p>}
+            </Link>
+            {/* Project Tasks */}
+            <Link
+              href={`/project/${projectId}/tasks`}
+              className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
+                pathname.includes('/tasks')
+                  ? 'bg-white text-[#003D9B]'
+                  : 'text-[#041B3C]'
+              }`}
+            >
+              <Image
+                src={tasks}
+                alt="project icon"
+                className="w-[21.5px] h-4"
+              />
+              {isOpen && <p className="text-[14px]">Project Tasks</p>}
+            </Link>
+            {/* Project Members */}
+            <Link
+              href={`/project/${projectId}/members`}
+              className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
+                pathname.includes('/members')
+                  ? 'bg-white text-[#003D9B]'
+                  : 'text-[#041B3C]'
+              }`}
+            >
+              <Image
+                src={members}
+                alt="project icon"
+                className="w-[21.5px] h-4"
+              />
+              {isOpen && <p className="text-[14px]">Project Members</p>}
+            </Link>
+            {/* Project Dtails */}
+            <Link
+              href={`/project/${projectId}/edit`}
+              className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
+                pathname.includes('/edit')
+                  ? 'bg-white text-[#003D9B]'
+                  : 'text-[#041B3C]'
+              }`}
+            >
+              <Image
+                src={details}
+                alt="project icon"
+                className="w-[21.5px] h-4"
+              />
+              {isOpen && <p className="text-[14px]">Project Details</p>}
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* Sidebar Footer */}

@@ -35,40 +35,38 @@ export default function Home({ children }: childrenProps) {
         </>
       )}
       {!isOpen ? (
-        <div className="flex flex-col w-full bg-[#F9F9FF]">
+        <div className="flex flex-col w-full bg-[#F9F9FF] h-screen">
           <Navbar
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />
 
-          <div className="flex flex-1">
+          <div className="flex flex-1 overflow-hidden min-h-0">
             <Sidebar
               isOpen={isOpen}
               setIsOpen={setIsOpen}
             />
 
-            <main className="flex-col flex flex-1 items-center w-full">
+            <main className="flex-col flex flex-1 items-center w-full overflow-y-auto">
               {children}
             </main>
           </div>
         </div>
       ) : (
-        <div className="flex w-full flex-col bg-[#F9F9FF]">
-          <div className="flex w-full">
+          <div className="flex w-full min-h-0 h-screen bg-[#F9F9FF]">
             <Sidebar
               isOpen={isOpen}
               setIsOpen={setIsOpen}
             />
-            <div className="flex flex-col flex-1 w-full">
+            <div className="flex flex-col flex-1 w-full min-h-0">
               <Navbar
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
               />
-              <main className="flex-1 flex justify-center w-full px-5">
+              <main className="flex-1 flex justify-center w-full px-5 overflow-y-auto">
                 <div className="w-full">{children}</div>
               </main>
             </div>
-          </div>
         </div>
       )}
       <div>
