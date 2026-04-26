@@ -162,7 +162,7 @@ export default function Project() {
       message="You don’t have any projects yet. Start by defining your first architectural workspace to begin tracking tasks and epics."
       button="Create New Project"
       buttonimage={addproject}
-      onClick={() => router.push(`/project/new`)}
+      onClick={() => router.push(`/project/add`)}
     />
   ) : (
     <div className="flex flex-col p-6 gap-6 md:py-8 md:gap-10 pb-20 md:pb-8 justify-between">
@@ -179,6 +179,7 @@ export default function Project() {
       <ProjectFooter
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
+        total={total}
         totalPages={totalPages}
       />
       <Link

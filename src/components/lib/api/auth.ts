@@ -4,9 +4,9 @@ import { getCookie, setCookie, deleteCookie } from '../cookies';
 type AuthRequest = {
   email: string;
   password: string;
-  data: {
-    name: string;
-    job_title?: string;
+    data?: {
+      name: string;
+      job_title?: string;
   };
 };
 
@@ -63,8 +63,12 @@ export async function auth(
   const result = await res.json();
 
   if (!res.ok) {
-    throw new Error(result.error_description || 'Invalid email or password');
-  }
+throw new Error(
+  result.error_description ||
+  result.msg ||
+  result.message ||
+  'Auth failed'
+);  }
 
   if (type === 'login') {
     const { access_token, refresh_token, user } = result;
