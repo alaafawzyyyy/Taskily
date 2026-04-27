@@ -214,6 +214,7 @@ export function ShowEpics() {
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
         totalPages={totalPages}
+        total={total}
       />
       <Link
         href={`/project/${projectId}/epics/new`}
