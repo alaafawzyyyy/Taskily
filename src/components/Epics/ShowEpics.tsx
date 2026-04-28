@@ -208,7 +208,14 @@ export function ShowEpics() {
               setModee('description');
             }}
           >
-            <EpicCard data={epic} />
+            <EpicCard
+              data={epic}
+              onEdit={() => {
+                setModee('edit');
+                setSelectedEpicId(epic.id);
+                setIsModalOpen(true);
+              }}
+            />
           </div>
         ))}
       </div>

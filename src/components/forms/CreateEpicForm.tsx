@@ -41,6 +41,7 @@ export function CreateEpicForm({
   initialData?: Partial<FormData>;
 }) {
   const router = useRouter();
+  const [editAssignee, setEditAssignee] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
   const params = useParams();
   const projectId =
@@ -91,7 +92,7 @@ export function CreateEpicForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col p-8 gap-8 bg-white mt-6 rounded-[15px] w-full md:min-w-[1000px]"
+      className="flex flex-col p-8 gap-8 bg-white mt-6 rounded-[15px] w-full"
     >
       {/* Project title */}
       <div className="flex flex-col gap-3">
@@ -120,17 +121,53 @@ export function CreateEpicForm({
       </div>
 
       {/* Assignee */}
+
       <div className="flex flex-col gap-5 w-[306px]  justify-between">
-        <label className="font-semibold text-[22.5px] text-[#333333] capitalize flex justify-between">
+        <label className="font-semibold text-[22.5px] text-[#333333] capitalize">
           assign to
         </label>
-        <div className="relative">
+
+        {mode === 'submit' ? (
+          <div>
+            <select {...register('assignee_id')}>
+              <option value="">Select member</option>
+              {members.map((m) => (
+                <option
+                  key={m.user_id}
+                  value={m.user_id}
+                >
+                  {m.metadata?.name || m.email}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-xs">
+              ▼
+            </div>
+            <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
+              {errors.assignee_id?.message}
+            </p>
+          </div>
+        ) : !editAssignee ? (
+          <div
+            onClick={() => setEditAssignee(true)}
+            className="flex items-center gap-2 cursor-pointer rounded-md px-4 h-[36px]"
+          >
+            <div className="w-6 h-6 rounded-full bg-[#CDDDFF] flex items-center justify-center text-xs font-bold">
+              {members
+                .find((m) => m.user_id === initialData?.assignee_id)
+                ?.metadata?.name?.slice(0, 2) || ''}
+            </div>
+            <p className="text-sm text-[#64748B]">
+              {members.find((m) => m.user_id === initialData?.assignee_id)
+                ?.metadata?.name || 'Unassigned'}
+            </p>
+          </div>
+        ) : (
           <select
             {...register('assignee_id')}
-            className=" text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
+            className="text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
           >
-            <option value="">Select member</option>
-
+            <option value="">Unassigned</option>
             {members.map((m: Member) => (
               <option
                 key={m.user_id}
@@ -140,13 +177,7 @@ export function CreateEpicForm({
               </option>
             ))}
           </select>
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-xs">
-            ▼
-          </div>
-        </div>
-        <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
-          {errors.assignee_id?.message}
-        </p>
+        )}
       </div>
 
       {/* deadline */}
@@ -169,9 +200,7 @@ export function CreateEpicForm({
       <div className="flex py-6 pt-4 gap-6 justify-end">
         {mode === 'submit' && (
           <>
-            <button
-              className="rounded-[15px] md:w-[182px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-[#036EFF]"
-            >
+            <button className="rounded-[15px] md:w-[182px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-[#036EFF]">
               Create
             </button>
             <button

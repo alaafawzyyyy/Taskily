@@ -16,14 +16,16 @@ type Props = {
 
 export type Pop = {
   epic_id: string;
+  description: string;
   title: string;
+  deadline: string;
   created_at: string;
   created_by: {
     name: string;
   };
   assignee: {
     name: string;
-    avatar: string;
+    sub: string;
   };
 };
 
@@ -85,8 +87,9 @@ export function PopUp({
 
             <div className="flex flex-col gap-8 p-8">
               <p className="text-[16px] leading-[26px] text-[#041B3CCC]">
-                A comprehensive review and upgrade of the core architectural
-                frameworks.
+                {selectedEpic?.description
+                  ? selectedEpic?.description
+                  : 'No description provided'}
               </p>
 
               <div className="grid grid-cols-3 gap-6 items-center">
@@ -166,10 +169,25 @@ export function PopUp({
           </div>
         </div>
       ) : (
-        <CreateEpicForm
-          mode="blur"
-          initialData={selectedEpic}
-        />
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col max-w-[672px] max-h-[90vh] overflow-y-auto rounded-lg bg-[#FFFFFF]"
+          >
+            <CreateEpicForm
+              mode="blur"
+              initialData={{
+                title: selectedEpic.title,
+                description: selectedEpic.description,
+                assignee_id: selectedEpic.assignee.sub,
+                deadline: selectedEpic.deadline,
+              }}
+            />
+          </div>
+        </div>
       )}
     </>
   );

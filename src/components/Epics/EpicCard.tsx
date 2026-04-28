@@ -3,6 +3,7 @@ import showmore from '../../../public/assets/icons/showmore.svg';
 import showmoreP from '../../../public/assets/icons/showmoreP.svg';
 import createdby from '../../../public/assets/icons/createdby.svg';
 import date from '../../../public/assets/icons/date.svg';
+import { useState } from 'react';
 
 export type Epic = {
   created_at: string;
@@ -21,9 +22,12 @@ export type Epic = {
 
 type Props = {
   data: Epic;
+  onEdit: () => void;
 };
 
-export function EpicCard({ data }: Props) {
+export function EpicCard({ data, onEdit }: Props) {
+  const [openMenu, setOpenMenu] = useState(false);
+
   function getInitials(name: string) {
     const parts = name.trim().split(' ');
     if (parts.length === 1) {
@@ -38,7 +42,7 @@ export function EpicCard({ data }: Props) {
     year: 'numeric',
   });
 
-  const DateP= new Date(data.created_at).toLocaleDateString('en-US', {
+  const DateP = new Date(data.created_at).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -55,16 +59,39 @@ export function EpicCard({ data }: Props) {
             TO DO
           </p>
         </div>
-        <Image
-          src={showmore}
-          alt="show more icon"
-          className="hidden md:block"
-        />
-        <Image
-          src={showmoreP}
-          alt="show more icon"
-          className="md:hidden block "
-        />
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMenu((prev) => !prev);
+          }}
+          className="relative px-3 "
+        >
+          <Image
+            src={showmore}
+            alt="show more icon"
+            className="hidden md:block"
+          />
+          <Image
+            src={showmoreP}
+            alt="show more icon"
+            className="md:hidden block "
+          />
+          {openMenu && (
+            <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border z-50">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                  setOpenMenu(false);
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm disabled:opacity-50"
+              >
+                {' '}
+                Edit Epic
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div className="pb-3">
         <p className="font-semibold text-5 leading-7 text-[#041B3C]">
