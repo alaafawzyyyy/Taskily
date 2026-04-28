@@ -33,7 +33,13 @@ export const createEpicSchema = z.object({
 });
 type FormData = z.infer<typeof createEpicSchema>;
 
-export function CreateEpicForm() {
+export function CreateEpicForm({
+  mode,
+  initialData,
+}: {
+  mode?: 'submit' | 'blur';
+  initialData?: Partial<FormData>;
+}) {
   const router = useRouter();
   const [members, setMembers] = useState<Member[]>([]);
   const params = useParams();
@@ -45,9 +51,17 @@ export function CreateEpicForm() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(createEpicSchema) });
+  } = useForm<FormData>({
+    resolver: zodResolver(createEpicSchema),
+    defaultValues: {
+      title: initialData?.title || '',
+      description: initialData?.description || '',
+      assignee_id: initialData?.assignee_id || '',
+      deadline: initialData?.deadline || '',
+    },
+  });
 
-//  onSubmit handler
+  //  onSubmit handler
   const onSubmit = async (data: FormData) => {
     const finalData = {
       ...data,
@@ -61,7 +75,7 @@ export function CreateEpicForm() {
     } else toast.error(`Failed to create project: ${res.error}`);
   };
 
-// getting members
+  // getting members
   useEffect(() => {
     if (!projectId) return;
 
@@ -153,15 +167,22 @@ export function CreateEpicForm() {
 
       {/* buttons save and cancel */}
       <div className="flex py-6 pt-4 gap-6 justify-end">
-        <button className="rounded-[15px] md:w-[182px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-[#036EFF]">
-          Create
-        </button>
-        <button
-          type="button"
-          className=" rounded-[15px] md:w-[182px] py-3 px-6 text-[14px] font-bold leading-5 text-[#036EFF] bg-[#EEF4FB]"
-        >
-          Cancel
-        </button>
+        {mode === 'submit' && (
+          <>
+            <button
+              className="rounded-[15px] md:w-[182px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-[#036EFF]"
+            >
+              Create
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push(`/project/${projectId}/epics`)}
+              className=" rounded-[15px] md:w-[182px] py-3 px-6 text-[14px] font-bold leading-5 text-[#036EFF] bg-[#EEF4FB]"
+            >
+              Cancel
+            </button>
+          </>
+        )}
       </div>
     </form>
   );

@@ -5,7 +5,7 @@ export default function EpicsPageNew() {
   return (
     <div>
       <CreateEbicHeader />
-      <CreateEpicForm />
+      <CreateEpicForm mode="submit"  />
     </div>
   );
 }

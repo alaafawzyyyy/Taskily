@@ -48,6 +48,7 @@ export function ShowEpics() {
   const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
   const [selectedEpic, setSelectedEpic] = useState<Pop | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modee, setModee] = useState<'description' | 'edit'>();
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -204,6 +205,7 @@ export function ShowEpics() {
             onClick={() => {
               setSelectedEpicId(epic.id);
               setIsModalOpen(true);
+              setModee('description');
             }}
           >
             <EpicCard data={epic} />
@@ -235,6 +237,7 @@ export function ShowEpics() {
         onClose={() => setIsModalOpen(false)}
         selectedEpic={selectedEpic}
         setIsModalOpen={setIsModalOpen}
+        modee={modee}
       />
     </div>
   );
