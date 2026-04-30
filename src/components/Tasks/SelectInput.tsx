@@ -6,11 +6,10 @@ type Option = {
 type SelectProps = {
   label: string;
   options: Option[];
-  value?: string;
   p?: string;
-};
+} & React.SelectHTMLAttributes<HTMLSelectElement>;
 
-export function SelectInput({ label, options, value, p }: SelectProps) {
+export function SelectInput({ label, options, p, ...props }: SelectProps) {
   return (
     <div className="flex flex-col gap-2 w-full">
       <label className="font-bold text-xs uppercase text-text-mid">
@@ -18,7 +17,7 @@ export function SelectInput({ label, options, value, p }: SelectProps) {
       </label>
       <select
         className="input px-4 pb-4 pt-15 bg-surface-strong"
-        value={value}
+        {...props}
       >
         <option
           value=""

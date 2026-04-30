@@ -87,7 +87,7 @@ export function ShowEpics() {
       ...(extraData || {}),
     };
     setSelectedEpic(updated);
-    
+
     setEpics((prev) =>
       prev.map((epic) =>
         epic.id === selectedEpicId ? { ...epic, ...updated } : epic,
@@ -244,9 +244,7 @@ export function ShowEpics() {
             <p className="text-slate-900 font-semibold text-base leading-6">
               {data.title}
             </p>
-            <p className="text-xs leading-5 text-mid">
-              {data.message}{' '}
-            </p>
+            <p className="text-xs leading-5 text-mid">{data.message} </p>
           </div>
         ))}
       </div>

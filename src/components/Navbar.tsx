@@ -39,7 +39,6 @@ export function Navbar({ isOpen, setIsOpen }: typeopen) {
   return (
     <div className="flex justify-between h-[64px] w-full border-b px-6 py-3 items-center sticky top-0 z-[40] bg-white">
       <div className="flex justify-center">
-
         <button onClick={() => setIsOpen((prev) => !prev)}>
           <Image
             src={menu}

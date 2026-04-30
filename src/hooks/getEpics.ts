@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { GetEpics } from '@/components/lib/api/epics';
 
 type Epic = {
+  id: string;
   epic_id: string;
   title: string;
 };

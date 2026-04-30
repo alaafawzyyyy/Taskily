@@ -46,8 +46,6 @@ export function AddProjectForm({
   });
   const router = useRouter();
 
-
-
   const description = useWatch({
     control,
     name: 'description',

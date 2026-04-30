@@ -21,7 +21,7 @@ type Props = {
   ) => void;
   extraData?: Partial<UpdateEpicFields>;
   isSaving: boolean;
-  projectId?:string
+  projectId?: string;
 };
 
 export type Pop = {
@@ -71,9 +71,7 @@ export function PopUp({
   }
 
   const handleAddTask = () => {
-    router.push(
-      `/project/${projectId}/tasks/new?epicId=${selectedEpic.epic_id}`,
-    );
+    router.push(`/project/${projectId}/tasks/new?epicId=${selectedEpic.id}`);
   };
   return (
     <>
