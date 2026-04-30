@@ -27,7 +27,7 @@ module.exports = {
 
         'text-primary-60': '#041B3C99',
         'text-primary-40': '#041B3C66',
-        'text-primary-80':'#041B3CCC',
+        'text-primary-80': '#041B3CCC',
 
         'slate-900': '#041b3c',
 
@@ -46,7 +46,7 @@ module.exports = {
       fontFamily: {
         base: ['Inter', 'sans-serif'],
       },
-      borderWidth: { 1.5: '1.5px'},
+      borderWidth: { 1.5: '1.5px' },
       borderRadius: {
         bodys: '15px',
       },

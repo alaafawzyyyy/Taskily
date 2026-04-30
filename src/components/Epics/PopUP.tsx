@@ -8,6 +8,7 @@ import { CalendarIcon } from '../icons/Calendar';
 import { PlusBlueIcon, PlusWhiteIcon } from '../icons/plus';
 import { NoTasksIcon } from '../icons/NoTasks';
 import { UnAssignedIcon } from '../icons/Unassigned';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   modeForm?: 'description' | 'edit';
@@ -22,7 +23,7 @@ type Props = {
   ) => void;
   extraData?: Partial<UpdateEpicFields>;
   isSaving: boolean;
-  projectId?:string
+  projectId?: string;
 };
 
 export type Pop = {
@@ -48,12 +49,19 @@ export function PopUp({
   selectedEpic,
   setIsModalOpen,
   handleUpdate,
+  projectId,
   isSaving,
 }: Props) {
+  const router = useRouter();
+
   if (!isOpen) return null;
   if (!selectedEpic) return null;
 
   const DateUS = formatDateENUS(selectedEpic?.created_at);
+
+  const handleAddTask = () => {
+    router.push(`/project/${projectId}/tasks/new?epicId=${selectedEpic.id}`);
+  };
 
   return (
     <>
@@ -63,7 +71,6 @@ export function PopUp({
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         >
           <div className="flex flex-col max-w-672 max-h-[90vh] overflow-y-auto rounded-lg bg-white">
-            {' '}
             <div className="border-b flex justify-between p-8 border-slate-300">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -91,7 +98,6 @@ export function PopUp({
               <div className="grid grid-cols-3 gap-6 items-center">
                 <div className="flex flex-col justify-start gap-8.5">
                   <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
-                    {' '}
                     CREATED BY
                   </p>
                   <div className="flex items-center gap-2">
@@ -157,7 +163,10 @@ export function PopUp({
                   <p className="pt-4 font-medium text-base leadin-6">
                     No tasks have been added to this epic yet
                   </p>
-                  <button className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm">
+                  <button
+                    onClick={handleAddTask}
+                    className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm"
+                  >
                     <PlusWhiteIcon />
                     <p>Add task</p>
                   </button>

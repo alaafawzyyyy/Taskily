@@ -11,7 +11,7 @@ import collapse from '../../public/assets/icons/collapse.svg';
 import Logout from '../../public/assets/icons/logout.svg';
 import { clearUser } from '../store/slices/userslices';
 import { useDispatch } from 'react-redux';
-import { logout } from '../components/lib/api/auth';
+import { logout } from './lib/api/auth';
 import { useParams } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 
