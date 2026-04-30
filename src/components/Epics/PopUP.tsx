@@ -51,15 +51,18 @@ export function PopUp({
 }: Props) {
   if (!isOpen) return null;
   if (!selectedEpic) return null;
+
   const DateUS = formatDateENUS(selectedEpic?.created_at);
+
   return (
     <>
       {modeForm === 'description' ? (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         >
-          <div className="flex flex-col max-w-672 max-h-90 overflow-y-auto rounded-lg bg-white">
+          <div className="flex flex-col max-w-672 max-h-[90vh] overflow-y-auto rounded-lg bg-white">
+            {' '}
             <div className="border-b flex justify-between p-8 border-slate-300">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -77,9 +80,8 @@ export function PopUp({
                 onClick={() => setIsModalOpen(false)}
               />
             </div>
-
             <div className="flex flex-col gap-8 p-8">
-              <p className="text-base leading-26 text-[#041B3CCC]">
+              <p className="text-base leading-26 text-text-primary-80">
                 {selectedEpic?.description
                   ? selectedEpic?.description
                   : 'No description provided'}
@@ -87,11 +89,12 @@ export function PopUp({
 
               <div className="grid grid-cols-3 gap-6 items-center">
                 <div className="flex flex-col justify-start gap-8.5">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
+                    {' '}
                     CREATED BY
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-10 leading-15 font-bold">
+                    <div className="w-7 h-7 rounded-full bg-primary-light flex items-center justify-center text-white text-bodyxs leading-15 font-bold">
                       {selectedEpic?.created_by.name ? (
                         getInitials(selectedEpic?.created_by.name)
                       ) : (
@@ -105,11 +108,11 @@ export function PopUp({
                 </div>
 
                 <div className="flex flex-col justify-start gap-2">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
                     Assignee
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-bg flex items-center justify-center text-51617E text-10 leading-15 font-bold">
+                    <div className="w-7 h-7 rounded-full bg-bg-light flex items-center justify-center text-accent-muted text-bodyxs leading-15 font-bold">
                       {selectedEpic.assignee?.name ? (
                         getInitials(selectedEpic.assignee.name)
                       ) : (
@@ -126,7 +129,7 @@ export function PopUp({
                 </div>
 
                 <div className="flex flex-col justify-start gap-2">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
                     CREATED at
                   </p>
                   <div className="flex items-center gap-2">
@@ -138,17 +141,17 @@ export function PopUp({
 
               <div className="flex flex-col gap-6">
                 <div className="flex gap-6 justify-between items-center">
-                  <p className="font-semibold text-18 leading-5 ">Tasks</p>
+                  <p className="font-semibold text-bodylg leading-5 ">Tasks</p>
                   <button>
                     <div className="flex gap-2 items-center">
                       <PlusBlueIcon />
-                      <p className="font-semibold text-14 leading-7 text-primary">
+                      <p className="font-semibold text-bodysm leading-7 text-primary">
                         Add Task
                       </p>
                     </div>
                   </button>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-surface-low">
+                <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-dark">
                   <NoTasksIcon />
                   <p className="pt-4 font-medium text-base leadin-6">
                     No tasks have been added to this epic yet

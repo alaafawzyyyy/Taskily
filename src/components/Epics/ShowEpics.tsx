@@ -306,6 +306,7 @@ export function ShowEpics() {
         modeForm={modeForm}
         handleUpdate={handleUpdate}
         isSaving={isSaving}
+        projectId={projectId}
       />
     </div>
   );
