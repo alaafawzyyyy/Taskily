@@ -47,3 +47,39 @@ export async function addTask(data: TaskData) {
     };
   }
 }
+
+// get tasks
+export async function GetTasksAPI(Epic_Id: string) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/project_tasks?epic_id=eq.${Epic_Id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
+
+    return {
+      ok: res.ok,
+      status: res.status,
+      data,
+      error: res.ok ? null : data?.message || 'Request failed',
+      res,
+    };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      status: 0,
+      data: null,
+      error: err instanceof Error ? err.message : 'Network error',
+    };
+  }
+}

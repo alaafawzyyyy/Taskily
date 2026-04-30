@@ -5,10 +5,14 @@ import { formatDateENUS } from '../lib/utils/dateFormatter';
 import { CloseIcon } from '../icons/Close';
 import { IdIcon } from '../icons/Id';
 import { CalendarIcon } from '../icons/Calendar';
-import { PlusBlueIcon, PlusWhiteIcon } from '../icons/plus';
-import { NoTasksIcon } from '../icons/NoTasks';
+import { PlusBlueIcon } from '../icons/plus';
 import { UnAssignedIcon } from '../icons/Unassigned';
 import { useRouter } from 'next/navigation';
+import { GetTasksAPI } from '../lib/api/tasks';
+import { useEffect, useState } from 'react';
+import { TasksList } from '../Tasks/TasksList';
+import { EmptyTask } from '../Tasks/EmptyTask';
+import { SkeletonList } from '../Tasks/skeleton';
 
 type Props = {
   modeForm?: 'description' | 'edit';
@@ -42,6 +46,15 @@ export type Pop = {
   } | null;
 };
 
+type Task = {
+  id: string;
+  title: string;
+  assignee?: {
+    name: string;
+  };
+  due_date?: string;
+};
+
 export function PopUp({
   isOpen,
   onClose,
@@ -52,7 +65,31 @@ export function PopUp({
   projectId,
   isSaving,
 }: Props) {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
+
+  // get tasks
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!isOpen || !selectedEpic?.id) return;
+      setLoading(true);
+      setError(null);
+
+      try {
+        const res = await GetTasksAPI(selectedEpic?.id);
+        setTasks(res.data || []);
+      } catch (err) {
+        setError('Failed to load tasks');
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, [isOpen, selectedEpic?.id]);
 
   if (!isOpen) return null;
   if (!selectedEpic) return null;
@@ -62,15 +99,15 @@ export function PopUp({
   const handleAddTask = () => {
     router.push(`/project/${projectId}/tasks/new?epicId=${selectedEpic.id}`);
   };
-
   return (
     <>
+      {/* submit form */}
       {modeForm === 'description' ? (
         <div
           onClick={onClose}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         >
-          <div className="flex flex-col max-w-672 max-h-[90vh] overflow-y-auto rounded-lg bg-white">
+          <div className="flex flex-col md:w-672 max-h-[90vh] overflow-y-auto rounded-lg bg-white">
             <div className="border-b flex justify-between p-8 border-slate-300">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -149,7 +186,7 @@ export function PopUp({
               <div className="flex flex-col gap-6">
                 <div className="flex gap-6 justify-between items-center">
                   <p className="font-semibold text-bodylg leading-5 ">Tasks</p>
-                  <button>
+                  <button onClick={handleAddTask}>
                     <div className="flex gap-2 items-center">
                       <PlusBlueIcon />
                       <p className="font-semibold text-bodysm leading-7 text-primary">
@@ -158,24 +195,21 @@ export function PopUp({
                     </div>
                   </button>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-dark">
-                  <NoTasksIcon />
-                  <p className="pt-4 font-medium text-base leadin-6">
-                    No tasks have been added to this epic yet
-                  </p>
-                  <button
-                    onClick={handleAddTask}
-                    className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm"
-                  >
-                    <PlusWhiteIcon />
-                    <p>Add task</p>
-                  </button>
+                <div>
+                  {loading && <SkeletonList/>}
+                  {error && <p className="text-error">Failed to load tasks</p>}
+                  {tasks.length === 0 && !loading ? (
+                    <EmptyTask handleAddTask={handleAddTask} />
+                  ) : (
+                    <TasksList tasks={tasks} />
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
       ) : (
+        // Edit Form
         <div
           onClick={onClose}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"

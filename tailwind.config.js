@@ -11,6 +11,7 @@ module.exports = {
         surface: '#f1f3ff',
         'surface-strong': '#d7e2ff',
         border: '#DDDDDD',
+        ' gray/50': '#f9fafb',
 
         white: '#ffffff',
         'bg-light': '#CDDDFF',
@@ -20,7 +21,6 @@ module.exports = {
 
         'text-primary': '#041b3c',
         'text-secondary': '#4f5f7b',
-        'text-muted': '#9ca3af',
         'text-heading': '#333333',
         'text-mid': '#434654',
         'text-icon': '#9ca3af',
@@ -28,15 +28,17 @@ module.exports = {
         'text-primary-60': '#041B3C99',
         'text-primary-40': '#041B3C66',
         'text-primary-80': '#041B3CCC',
+        'text-primary-70': '#041B3CB2',
 
         'slate-900': '#041b3c',
 
         'slate-700': '#4f5f7b',
         'slate-300': '#c3c6d6',
+        'slate-300/30': '#C3C6D64D',
+        'slate-300/15': '#C3C6D626',
         slate: '#64748B',
 
         accent: '#036EFF',
-        'accent-light': '#CDDDFF',
         'accent-muted': '#51617E',
 
         success: '#82f9be',
@@ -46,7 +48,7 @@ module.exports = {
       fontFamily: {
         base: ['Inter', 'sans-serif'],
       },
-      borderWidth: { 1.5: '1.5px' },
+      borderWidth: { 1.5: '1.5px', 1: '1', 2: '2' },
       borderRadius: {
         bodys: '15px',
       },
@@ -55,6 +57,8 @@ module.exports = {
         bodysm: '14px',
         bodylg: '18px',
         bodyxl: '22.5px',
+        body16: '16px',
+        bodyxxs: '8px',
       },
       spacing: {
         21: '84px',
@@ -66,6 +70,7 @@ module.exports = {
         8.5: '8.5px',
         10: '10px',
         15: '15px',
+        20: '20px',
       },
       letterSpacing: {
         tight: '0.6px',
