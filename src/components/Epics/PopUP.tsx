@@ -5,6 +5,7 @@ import plus from '../../../public/assets/icons/plus.svg';
 import notasks from '../../../public/assets/icons/notasks.svg';
 import date from '../../../public/assets/icons/date.svg';
 import { CreateEpicForm } from '../forms/CreateEpicForm';
+import { UpdateEpicFields } from './ShowEpics';
 
 type Props = {
   modee?: 'description' | 'edit';
@@ -12,6 +13,13 @@ type Props = {
   selectedEpic: Pop | null;
   onClose: () => void;
   setIsModalOpen: (value: boolean) => void;
+  handleUpdate: (
+    field: keyof UpdateEpicFields,
+    value: string | null,
+    extraData?: Partial<UpdateEpicFields>,
+  ) => void;
+  extraData?: Partial<UpdateEpicFields>;
+  isSaving: boolean;
 };
 
 export type Pop = {
@@ -20,6 +28,7 @@ export type Pop = {
   title: string;
   deadline: string;
   created_at: string;
+  id: string;
   created_by: {
     name: string;
   };
@@ -35,6 +44,8 @@ export function PopUp({
   modee,
   selectedEpic,
   setIsModalOpen,
+  handleUpdate,
+  isSaving,
 }: Props) {
   if (!isOpen) return null;
   if (!selectedEpic) return null;
@@ -46,8 +57,8 @@ export function PopUp({
   });
 
   function getInitials(name: string) {
+    if (!name || !name.trim()) return 'NA';
     const parts = name.trim().split(' ');
-
     if (parts.length === 1) {
       return parts[0].slice(0, 2).toUpperCase();
     }
@@ -99,7 +110,9 @@ export function PopUp({
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-[#0052CC] flex items-center justify-center text-white text-[10px] leading-[15px] font-bold">
-                      {getInitials(selectedEpic?.created_by.name)}
+                      {selectedEpic?.created_by.name
+                        ? getInitials(selectedEpic?.created_by.name)
+                        : 'NA'}
                     </div>
                     <p className="text-sm font-medium text-[#041B3C] leading-5">
                       {selectedEpic?.created_by.name}
@@ -179,12 +192,10 @@ export function PopUp({
           >
             <CreateEpicForm
               mode="blur"
-              initialData={{
-                title: selectedEpic.title,
-                description: selectedEpic.description,
-                assignee_id: selectedEpic.assignee.sub,
-                deadline: selectedEpic.deadline,
-              }}
+              selectedEpicId={selectedEpic.id}
+              handleUpdate={handleUpdate}
+              selectedEpic={selectedEpic}
+              isSaving={isSaving}
             />
           </div>
         </div>

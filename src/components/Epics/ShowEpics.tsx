@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Epic, EpicCard } from './EpicCard';
 import { useParams, useRouter } from 'next/navigation';
-import { GetEpicDetails, GetEpics } from '../lib/api/epics';
+import { GetEpicDetails, GetEpics, UpdateEpic } from '../lib/api/epics';
 import { ProjectErrorPage } from '../ProjectErrorPage';
 import { NoProjects } from '../NoProjects';
 import Image from 'next/image';
@@ -17,6 +17,7 @@ import { SkeletonEpics } from './SkeletonEpics';
 import ProjectFooter from '../showProjects/ProjectsFooter';
 import Link from 'next/link';
 import { Pop, PopUp } from './PopUP';
+import toast from 'react-hot-toast';
 
 const footerDate = [
   {
@@ -37,6 +38,16 @@ const footerDate = [
     message: 'Visualize percentage completion at a macro project level.',
   },
 ];
+export type UpdateEpicFields = Partial<{
+  title: string;
+  description?: string;
+  assignee_id: string | null;
+  deadline: string | null;
+  assignee: {
+    name: string;
+    sub: string;
+  } | null;
+}>;
 
 export function ShowEpics() {
   const [epics, setEpics] = useState<Epic[]>([]);
@@ -49,28 +60,74 @@ export function ShowEpics() {
   const [selectedEpic, setSelectedEpic] = useState<Pop | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modee, setModee] = useState<'description' | 'edit'>();
-
+  const [isSaving, setIsSaving] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const limit = 6;
-
   const router = useRouter();
   const params = useParams();
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : undefined;
 
+  // handle update
+  const handleUpdate = async (
+    field: keyof UpdateEpicFields,
+    value: any,
+    extraData: any,
+  ) => {
+    if (!selectedEpicId || !selectedEpic) return;
+    const prevState = selectedEpic;
+
+    const prevValue = selectedEpic[field as keyof typeof selectedEpic];
+    if (prevValue === value) return;
+
+    const updated = {
+      ...selectedEpic,
+      [field]: value,
+      ...(extraData || {}),
+    };
+    setSelectedEpic(updated);
+    
+    setEpics((prev) =>
+      prev.map((epic) =>
+        epic.id === selectedEpicId ? { ...epic, ...updated } : epic,
+      ),
+    );
+
+    try {
+      setIsSaving(true);
+
+      const res = await UpdateEpic({
+        selectedEpicId,
+        data: { [field]: value },
+      });
+
+      if (!res.ok) throw new Error();
+      toast.success('Updated');
+    } catch {
+      toast.error('Failed to update epic. Please try again.');
+      setSelectedEpic(prevState);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // fetch details
   const fetchDetails = async () => {
     if (!projectId || !selectedEpicId) return;
     const data = await GetEpicDetails({ projectId, selectedEpicId });
     setSelectedEpic(data);
     console.log(data);
   };
+
+  // fetch data for epic details
   useEffect(() => {
     if (isModalOpen) {
       fetchDetails();
     }
   }, [isModalOpen, selectedEpicId]);
 
+  // fetch epics
   const fetchEpics = async () => {
     if (!projectId) return;
 
@@ -241,10 +298,14 @@ export function ShowEpics() {
       </div>
       <PopUp
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
         selectedEpic={selectedEpic}
         setIsModalOpen={setIsModalOpen}
         modee={modee}
+        handleUpdate={handleUpdate}
+        isSaving={isSaving}
       />
     </div>
   );

@@ -29,6 +29,7 @@ export function EpicCard({ data, onEdit }: Props) {
   const [openMenu, setOpenMenu] = useState(false);
 
   function getInitials(name: string) {
+    if (!name || !name.trim()) return 'NA';
     const parts = name.trim().split(' ');
     if (parts.length === 1) {
       return parts[0].slice(0, 2).toUpperCase();
@@ -102,7 +103,7 @@ export function EpicCard({ data, onEdit }: Props) {
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
             <p className="md:bg-[#65DCA4] bg-[#003D9B] flex items-center justify-center rounded-xl py-[10px] md:w-10 md:h-10 w-7 h-7 text-center md:text-[14px] text-[10px] font-bold leading-5 text-white md:text-[#002113]">
-              {getInitials(data.assignee.name)}
+              {getInitials(data?.assignee?.name)}
             </p>
 
             <div className="flex flex-col">
@@ -110,7 +111,7 @@ export function EpicCard({ data, onEdit }: Props) {
                 assignee
               </p>
               <p className="order-1 md:order-2 capitalize text-[14px] font-semibold leading-5 text-[#041B3C]">
-                {data.assignee.name}
+                {data.assignee?.name || 'Unassigned'}
               </p>
             </div>
           </div>

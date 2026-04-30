@@ -1,12 +1,15 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { CreateEbic } from '../lib/api/epics';
+import { CreateEbic, GetEpicDetails } from '../lib/api/epics';
 import { useEffect, useState } from 'react';
 import { getProjectMembers } from '../lib/api/ProjectAPI';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
+import { useWatch } from 'react-hook-form';
+import { UpdateEpicFields } from '../Epics/ShowEpics';
+import { Pop } from '../Epics/PopUP';
 
 const today = new Date().toISOString().split('T')[0];
 type Member = {
@@ -23,22 +26,39 @@ type Member = {
 export const createEpicSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters.'),
   description: z.string().optional(),
-  assignee_id: z.string().min(1, 'Please select a member'),
+  assignee_id: z
+    .string()
+    .min(1, 'Please select a member')
+    .optional()
+    .nullable(),
   deadline: z
     .string()
     .min(1, 'Please select a date')
     .refine((value) => {
       return value >= today;
-    }, 'Deadline must be today or later'),
+    }, 'Deadline must be today or later')
+    .optional()
+    .nullable(),
 });
 type FormData = z.infer<typeof createEpicSchema>;
 
 export function CreateEpicForm({
   mode,
-  initialData,
+  selectedEpicId,
+  handleUpdate,
+  selectedEpic,
+  isSaving,
 }: {
   mode?: 'submit' | 'blur';
-  initialData?: Partial<FormData>;
+  onUpdate?: (fields: Partial<FormData>) => void;
+  selectedEpicId?: string;
+  isSaving?: boolean;
+  handleUpdate?: (
+    field: keyof UpdateEpicFields,
+    value: string | null,
+    extraData?: Partial<UpdateEpicFields>,
+  ) => void;
+  selectedEpic?: Pop | null;
 }) {
   const router = useRouter();
   const [editAssignee, setEditAssignee] = useState(false);
@@ -51,14 +71,16 @@ export function CreateEpicForm({
     register,
     handleSubmit,
     reset,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(createEpicSchema),
     defaultValues: {
-      title: initialData?.title || '',
-      description: initialData?.description || '',
-      assignee_id: initialData?.assignee_id || '',
-      deadline: initialData?.deadline || '',
+      title: '',
+      description: '',
+      assignee_id: null,
+      deadline: null,
     },
   });
 
@@ -67,6 +89,8 @@ export function CreateEpicForm({
     const finalData = {
       ...data,
       project_id: projectId,
+      assignee_id: data.assignee_id ?? null,
+      deadline: data.deadline ?? null,
     };
     const res = await CreateEbic(finalData);
     if (res.ok) {
@@ -75,6 +99,32 @@ export function CreateEpicForm({
       reset();
     } else toast.error(`Failed to create project: ${res.error}`);
   };
+
+  // fetch details
+  useEffect(() => {
+    if (!selectedEpicId) return;
+
+    const fetch = async () => {
+      try {
+        const data = await GetEpicDetails({
+          projectId,
+          selectedEpicId: selectedEpicId,
+        });
+
+        reset({
+          title: data.title || '',
+          description: data.description || '',
+          assignee_id: data.assignee?.sub ?? null,
+          deadline: data.deadline ?? null,
+        });
+      } catch (error) {
+        console.error('Failed to fetch epic details:', error);
+        toast.error('Failed to load epic details');
+      }
+    };
+
+    fetch();
+  }, [selectedEpicId, projectId, reset]);
 
   // getting members
   useEffect(() => {
@@ -89,10 +139,17 @@ export function CreateEpicForm({
     fetchMembers();
   }, [projectId]);
 
+  const assigneeId = useWatch({
+    control,
+    name: 'assignee_id',
+  });
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col p-8 gap-8 bg-white mt-6 rounded-[15px] w-full"
+      className={`flex flex-col p-8 gap-8 bg-white mt-6 rounded-[15px] w-full ${
+        isSaving ? 'opacity-60 pointer-events-none' : ''
+      }`}
     >
       {/* Project title */}
       <div className="flex flex-col gap-3">
@@ -100,8 +157,21 @@ export function CreateEpicForm({
           title
         </p>
         <input
+          disabled={isSaving}
           type="text"
           {...register('title')}
+          onBlur={(e) => {
+            if (mode !== 'blur') return;
+
+            const value = e.target.value.trim();
+            if (!value || value.length < 3) {
+              toast.error('Title must be at least 3 characters');
+              setValue('title', selectedEpic?.title || '');
+              return;
+            }
+            if (value === selectedEpic?.title) return;
+            handleUpdate?.('title', value);
+          }}
           className="rounded-[15px] py-3 px-4 border-[1.5px] border-[#DDDDDD]"
         />
         <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
@@ -115,9 +185,15 @@ export function CreateEpicForm({
           description
         </p>
         <textarea
+          disabled={isSaving}
+          placeholder="No description provided"
           {...register('description')}
+          onBlur={(e) => {
+            const value = e.target.value.trim();
+            handleUpdate?.('description', value);
+          }}
           className=" h-[106px] rounded-[15px] pt-3 pb-[84px] px-4 border-[1.5px] border-[#DDDDDD]"
-        />{' '}
+        />
       </div>
 
       {/* Assignee */}
@@ -154,17 +230,33 @@ export function CreateEpicForm({
           >
             <div className="w-6 h-6 rounded-full bg-[#CDDDFF] flex items-center justify-center text-xs font-bold">
               {members
-                .find((m) => m.user_id === initialData?.assignee_id)
+                .find((m) => m.user_id === assigneeId)
                 ?.metadata?.name?.slice(0, 2) || ''}
             </div>
             <p className="text-sm text-[#64748B]">
-              {members.find((m) => m.user_id === initialData?.assignee_id)
-                ?.metadata?.name || 'Unassigned'}
+              {members.find((m) => m.user_id === assigneeId)?.metadata?.name ||
+                'Unassigned'}
             </p>
           </div>
         ) : (
           <select
+            disabled={isSaving}
             {...register('assignee_id')}
+            onChange={(e) => {
+              const value = e.target.value || null;
+
+              const selectedMember = members.find((m) => m.user_id === value);
+
+              handleUpdate?.('assignee_id', value, {
+                assignee: value
+                  ? {
+                      name: selectedMember?.metadata?.name || '',
+                      sub: value,
+                    }
+                  : null,
+              });
+            }}
+            autoFocus
             className="text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
           >
             <option value="">Unassigned</option>
@@ -186,9 +278,15 @@ export function CreateEpicForm({
           deadline
         </label>
         <input
+          disabled={isSaving}
           type="date"
           min={today}
           {...register('deadline')}
+          onChange={(e) => {
+            const value = e.target.value || null;
+
+            handleUpdate?.('deadline', value);
+          }}
           className=" text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
         />
         <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
