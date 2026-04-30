@@ -8,18 +8,21 @@ import { getInitials } from '../lib/utils/initials';
 import { formatDateENGB, formatDateENUS } from '../lib/utils/dateFormatter';
 
 export type Epic = {
-  created_at: string;
+  id: string;
+  title: string;
   description: string;
   epic_id: string;
-  title: string;
-  initial: string;
-  id: string;
+  created_at: string;
+  created_by: { name: string };
+
+  assignee_id?: string | null;
+
   assignee: {
     name: string;
-  };
-  created_by: {
-    name: string;
-  };
+    sub: string;
+  } | null;
+
+  deadline: string | null;
 };
 
 type Props = {
@@ -87,7 +90,9 @@ export function EpicCard({ data, onEdit }: Props) {
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
             <p className="md:bg-[#65DCA4] bg-[#003D9B] flex items-center justify-center rounded-xl py-[10px] md:w-10 md:h-10 w-7 h-7 text-center md:text-[14px] text-[10px] font-bold leading-5 text-white md:text-[#002113]">
-              {getInitials(data?.assignee?.name)}
+              {data?.created_by.name
+                ? getInitials(data?.created_by.name)
+                : 'NA'}
             </p>
 
             <div className="flex flex-col">

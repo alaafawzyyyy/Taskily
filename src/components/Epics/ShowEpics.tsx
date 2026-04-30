@@ -70,10 +70,10 @@ export function ShowEpics() {
     typeof params.projectId === 'string' ? params.projectId : undefined;
 
   // handle update
-  const handleUpdate = async (
-    field: keyof UpdateEpicFields,
-    value: any,
-    extraData: any,
+  const handleUpdate = async <K extends keyof UpdateEpicFields>(
+    field: K,
+    value: UpdateEpicFields[K],
+    extraData?: Partial<UpdateEpicFields>,
   ) => {
     if (!selectedEpicId || !selectedEpic) return;
     const prevState = selectedEpic;
@@ -81,13 +81,14 @@ export function ShowEpics() {
     const prevValue = selectedEpic[field as keyof typeof selectedEpic];
     if (prevValue === value) return;
 
-    const updated = {
+    const updated: Pop = {
       ...selectedEpic,
       [field]: value,
       ...(extraData || {}),
     };
+
     setSelectedEpic(updated);
-    
+
     setEpics((prev) =>
       prev.map((epic) =>
         epic.id === selectedEpicId ? { ...epic, ...updated } : epic,
@@ -244,9 +245,7 @@ export function ShowEpics() {
             <p className="text-slate-900 font-semibold text-base leading-6">
               {data.title}
             </p>
-            <p className="text-xs leading-5 text-mid">
-              {data.message}{' '}
-            </p>
+            <p className="text-xs leading-5 text-mid">{data.message} </p>
           </div>
         ))}
       </div>

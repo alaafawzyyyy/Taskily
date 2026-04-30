@@ -28,7 +28,7 @@ export type Pop = {
   epic_id: string;
   description: string;
   title: string;
-  deadline: string;
+  deadline: string | null;
   created_at: string;
   id: string;
   created_by: {
@@ -37,7 +37,7 @@ export type Pop = {
   assignee: {
     name: string;
     sub: string;
-  };
+  } | null;
 };
 
 export function PopUp({
@@ -52,7 +52,7 @@ export function PopUp({
   if (!isOpen) return null;
   if (!selectedEpic) return null;
 
-  const DateUS = formatDateENUS(selectedEpic?.created_at)
+  const DateUS = formatDateENUS(selectedEpic?.created_at);
   return (
     <>
       {modee === 'description' ? (
@@ -114,10 +114,10 @@ export function PopUp({
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-bg flex items-center justify-center text-51617E text-10 leading-15 font-bold">
-                      {getInitials(selectedEpic?.assignee.name)}
+                      {getInitials(selectedEpic.assignee?.name || 'NA')}
                     </div>
                     <p className="text-sm font-medium text-slate-900 leading-5">
-                      {selectedEpic?.assignee.name}
+                      {selectedEpic.assignee?.name || 'Unassigned'}
                     </p>
                   </div>
                 </div>
