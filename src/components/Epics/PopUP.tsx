@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import id from '../../../public/assets/icons/id.svg';
-import close from '../../../public/assets/icons/close.svg';
-import plus from '../../../public/assets/icons/plus.svg';
-import notasks from '../../../public/assets/icons/notasks.svg';
-import date from '../../../public/assets/icons/date.svg';
 import { CreateEpicForm } from '../forms/CreateEpicForm';
 import { UpdateEpicFields } from './ShowEpics';
 import { getInitials } from '../lib/utils/initials';
 import { formatDateENUS } from '../lib/utils/dateFormatter';
+import { CloseIcon } from '../icons/Close';
+import { IdIcon } from '../icons/Id';
+import { CalendarIcon } from '../icons/Calendar';
+import { PlusBlueIcon, PlusWhiteIcon } from '../icons/plus';
+import { NoTasksIcon } from '../icons/NoTasks';
+import { UnAssignedIcon } from '../icons/Unassigned';
 
 type Props = {
-  modee?: 'description' | 'edit';
+  modeForm?: 'description' | 'edit';
   isOpen: boolean;
   selectedEpic: Pop | null;
   onClose: () => void;
@@ -43,7 +43,7 @@ export type Pop = {
 export function PopUp({
   isOpen,
   onClose,
-  modee,
+  modeForm,
   selectedEpic,
   setIsModalOpen,
   handleUpdate,
@@ -51,11 +51,10 @@ export function PopUp({
 }: Props) {
   if (!isOpen) return null;
   if (!selectedEpic) return null;
-
   const DateUS = formatDateENUS(selectedEpic?.created_at);
   return (
     <>
-      {modee === 'description' ? (
+      {modeForm === 'description' ? (
         <div
           onClick={onClose}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
@@ -64,10 +63,7 @@ export function PopUp({
             <div className="border-b flex justify-between p-8 border-slate-300">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
-                  <Image
-                    src={id}
-                    alt="Id icon"
-                  />
+                  <IdIcon />
                   <p className="font-bold text-xs leading-4 tracking-0.6 text-slate-900-op capitalize ">
                     {selectedEpic?.epic_id}
                   </p>
@@ -76,9 +72,7 @@ export function PopUp({
                   {selectedEpic?.title}
                 </p>
               </div>
-              <Image
-                src={close}
-                alt="close icon"
+              <CloseIcon
                 className="cursor-pointer"
                 onClick={() => setIsModalOpen(false)}
               />
@@ -97,10 +91,12 @@ export function PopUp({
                     CREATED BY
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-white text-10 leading-15 font-bold">
-                      {selectedEpic?.created_by.name
-                        ? getInitials(selectedEpic?.created_by.name)
-                        : 'NA'}
+                    <div className="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-10 leading-15 font-bold">
+                      {selectedEpic?.created_by.name ? (
+                        getInitials(selectedEpic?.created_by.name)
+                      ) : (
+                        <UnAssignedIcon />
+                      )}
                     </div>
                     <p className="text-sm font-medium text-slate-900 leading-5">
                       {selectedEpic?.created_by.name}
@@ -114,8 +110,15 @@ export function PopUp({
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-bg flex items-center justify-center text-51617E text-10 leading-15 font-bold">
-                      {getInitials(selectedEpic.assignee?.name || 'NA')}
+                      {selectedEpic.assignee?.name ? (
+                        getInitials(selectedEpic.assignee.name)
+                      ) : (
+                        <div className="w-6 h-6 rounded-xl border-[2px] flex items-center justify-center bg-[#E0E8FF]">
+                          <UnAssignedIcon />
+                        </div>
+                      )}
                     </div>
+
                     <p className="text-sm font-medium text-slate-900 leading-5">
                       {selectedEpic.assignee?.name || 'Unassigned'}
                     </p>
@@ -127,10 +130,7 @@ export function PopUp({
                     CREATED at
                   </p>
                   <div className="flex items-center gap-2">
-                    <Image
-                      src={date}
-                      alt="calendar icon"
-                    />
+                    <CalendarIcon />
                     <p className="text-sm font-medium">{DateUS}</p>
                   </div>
                 </div>
@@ -140,28 +140,21 @@ export function PopUp({
                 <div className="flex gap-6 justify-between items-center">
                   <p className="font-semibold text-18 leading-5 ">Tasks</p>
                   <button>
-                    <Image
-                      src={plus}
-                      alt="plus icon"
-                    />
-                    <p className="font-semibold text-14 leading-7 text-primary">
-                      Add Task
-                    </p>
+                    <div className="flex gap-2 items-center">
+                      <PlusBlueIcon />
+                      <p className="font-semibold text-14 leading-7 text-primary">
+                        Add Task
+                      </p>
+                    </div>
                   </button>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-surface-low">
-                  <Image
-                    src={notasks}
-                    alt="no tasks icon"
-                  />
+                  <NoTasksIcon />
                   <p className="pt-4 font-medium text-base leadin-6">
                     No tasks have been added to this epic yet
                   </p>
                   <button className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm">
-                    <Image
-                      src={plus}
-                      alt="plus icon"
-                    />
+                    <PlusWhiteIcon />
                     <p>Add task</p>
                   </button>
                 </div>

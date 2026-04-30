@@ -6,6 +6,7 @@ import dateicon from '../../../public/assets/icons/date.svg';
 import { useState } from 'react';
 import { getInitials } from '../lib/utils/initials';
 import { formatDateENGB, formatDateENUS } from '../lib/utils/dateFormatter';
+import { UnAssignedIcon } from '../icons/Unassigned';
 
 export type Epic = {
   id: string;
@@ -89,11 +90,17 @@ export function EpicCard({ data, onEdit }: Props) {
       <div className="flex flex-col gap-6">
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
-            <p className="md:bg-[#65DCA4] bg-[#003D9B] flex items-center justify-center rounded-xl py-[10px] md:w-10 md:h-10 w-7 h-7 text-center md:text-[14px] text-[10px] font-bold leading-5 text-white md:text-[#002113]">
-              {data?.created_by.name
-                ? getInitials(data?.created_by.name)
-                : 'NA'}
-            </p>
+            <div>
+              {data.assignee?.name ? (
+                <p className="md:bg-[#65DCA4] bg-[#003D9B] flex items-center justify-center rounded-xl py-[10px] md:w-10 md:h-10 w-7 h-7 text-center md:text-[14px] text-[10px] font-bold leading-5 text-white md:text-[#002113]">
+                  {getInitials(data.assignee?.name)}
+                </p>
+              ) : (
+                <div className="w-6 h-6 rounded-xl border-[2px] flex items-center justify-center bg-[#E0E8FF]">
+                  <UnAssignedIcon />
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col">
               <p className="order-2 md:order-1 capitalize text-[12px] font-medium leading-4 md:text-[#434654] text-[#737685]">
