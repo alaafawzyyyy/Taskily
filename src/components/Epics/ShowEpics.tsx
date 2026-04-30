@@ -224,14 +224,15 @@ export function ShowEpics() {
   }
   return epics.length === 0 && !isLoading ? (
     <div className="flex flex-col gap-16 items-center">
-      <NoProjects
-        image={noepics}
-        title="No epics in this project yet."
-        message="Break down your large project into manageable epics to track progress better and maintain architectural clarity."
-        button="Create First Epic"
-        buttonimage={createepic}
-        onClick={() => router.push(`/project/${projectId}/epics/new`)}
-      />
+      <Link href={`/project/${projectId}/epics/new`}>
+        <NoProjects
+          image={noepics}
+          title="No epics in this project yet."
+          message="Break down your large project into manageable epics to track progress better and maintain architectural clarity."
+          button="Create First Epic"
+          buttonimage={createepic}
+        />
+      </Link>
       <div className="flex gap-6 w-672 ">
         {footerDate.slice(0, limit).map((data, id) => (
           <div

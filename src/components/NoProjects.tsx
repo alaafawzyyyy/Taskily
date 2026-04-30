@@ -7,7 +7,7 @@ type Empty={
   message:string,
   button:string,
   buttonimage:string,
-  onClick: () => void;
+  onClick?: () => void;
 
 }
 export function NoProjects({image, title,message,button, onClick , buttonimage} :Empty ) {
