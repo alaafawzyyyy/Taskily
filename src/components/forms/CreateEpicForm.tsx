@@ -10,8 +10,9 @@ import toast from 'react-hot-toast';
 import { useWatch } from 'react-hook-form';
 import { UpdateEpicFields } from '../Epics/ShowEpics';
 import { Pop } from '../Epics/PopUP';
+import { todayDate } from '../lib/utils/dateFormatter';
 
-const today = new Date().toISOString().split('T')[0];
+const today = todayDate;
 type Member = {
   user_id: string;
   email: string;

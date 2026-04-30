@@ -6,7 +6,8 @@ import notasks from '../../../public/assets/icons/notasks.svg';
 import date from '../../../public/assets/icons/date.svg';
 import { CreateEpicForm } from '../forms/CreateEpicForm';
 import { UpdateEpicFields } from './ShowEpics';
-import { getInitials } from '../lib/utils';
+import { getInitials } from '../lib/utils/initials';
+import { formatDateENUS } from '../lib/utils/dateFormatter';
 
 type Props = {
   modee?: 'description' | 'edit';
@@ -51,11 +52,7 @@ export function PopUp({
   if (!isOpen) return null;
   if (!selectedEpic) return null;
 
-  const DateD = new Date(selectedEpic?.created_at).toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const DateUS = formatDateENUS(selectedEpic?.created_at)
   return (
     <>
       {modee === 'description' ? (
@@ -134,7 +131,7 @@ export function PopUp({
                       src={date}
                       alt="calendar icon"
                     />
-                    <p className="text-sm font-medium">{DateD}</p>
+                    <p className="text-sm font-medium">{DateUS}</p>
                   </div>
                 </div>
               </div>

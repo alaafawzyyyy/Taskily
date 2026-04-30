@@ -2,9 +2,10 @@ import Image from 'next/image';
 import showmore from '../../../public/assets/icons/showmore.svg';
 import showmoreP from '../../../public/assets/icons/showmoreP.svg';
 import createdby from '../../../public/assets/icons/createdby.svg';
-import date from '../../../public/assets/icons/date.svg';
+import dateicon from '../../../public/assets/icons/date.svg';
 import { useState } from 'react';
-import { getInitials } from '../lib/utils';
+import { getInitials } from '../lib/utils/initials';
+import { formatDateENGB, formatDateENUS } from '../lib/utils/dateFormatter';
 
 export type Epic = {
   created_at: string;
@@ -29,17 +30,8 @@ type Props = {
 export function EpicCard({ data, onEdit }: Props) {
   const [openMenu, setOpenMenu] = useState(false);
 
-  const DateD = new Date(data.created_at).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-
-  const DateP = new Date(data.created_at).toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const dateGB = formatDateENGB(data.created_at);
+  const dateUS = formatDateENUS(data.created_at);
 
   return (
     <div className="rounded-lg md:border-l-4 justify-between p-4 md:border-[#004E32] bg-white">
@@ -116,7 +108,7 @@ export function EpicCard({ data, onEdit }: Props) {
               deadline
             </p>
             <p className="text-[12px] leading-4 font-medium text-[#041B3C]">
-              {DateP}
+              {dateUS}
             </p>
           </div>
         </div>
@@ -136,11 +128,11 @@ export function EpicCard({ data, onEdit }: Props) {
           </div>
           <div className="flex gap-2">
             <Image
-              src={date}
+              src={dateicon}
               alt="date icon"
             />
             <p className="text-[11px] leading-[16.5px] text-[#434654CC]">
-              {DateD}
+              {dateGB}
             </p>
           </div>
         </div>

@@ -7,7 +7,7 @@ import { getUser } from './lib/api/auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../store/slices/userslices';
 import { RootState } from '../store/index';
-import { getInitials } from './lib/utils';
+import { getInitials } from './lib/utils/initials';
 type typeopen = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +32,6 @@ export function Navbar({ isOpen, setIsOpen }: typeopen) {
   return (
     <div className="flex justify-between h-[64px] w-full border-b px-6 py-3 items-center sticky top-0 z-[40] bg-white">
       <div className="flex justify-center">
-
         <button onClick={() => setIsOpen((prev) => !prev)}>
           <Image
             src={menu}

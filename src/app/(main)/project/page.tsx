@@ -16,6 +16,7 @@ import { NoProjects } from '@/components/NoProjects';
 import { useRouter } from 'next/navigation';
 import { SkeletonCard } from '@/components/showProjects/SkeletonCard';
 import { ProjectErrorPage } from '@/components/ProjectErrorPage';
+import { formatDateENGB } from '@/components/lib/utils/dateFormatter';
 
 export default function Project() {
   const [cards, setCards] = useState<cardDetailsType[]>([]);
@@ -57,11 +58,7 @@ export default function Project() {
           name: item.name,
           description: item.description,
           id: item.id,
-          created_at: new Date(item.created_at).toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          }),
+          created_at: formatDateENGB(item.created_at)
         }));
 
         // showing the whole pages for mobiles and the selected page for desktop
