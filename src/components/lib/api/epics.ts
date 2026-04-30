@@ -8,9 +8,9 @@ const accessToken = getCookie('access_token');
 type epicData = {
   title: string;
   description?: string;
-  assignee_id: string;
+  assignee_id: string | null;
   project_id: string;
-  deadline: string;
+  deadline: string | null;
 };
 
 // Create Epic API
@@ -120,5 +120,48 @@ export async function GetEpicDetails({
     return data[0];
   } catch (err) {
     console.log(err);
+  }
+}
+
+// patch epics
+export async function UpdateEpic({
+  data,
+  selectedEpicId,
+}: {
+  data: Partial<epicData>;
+  selectedEpicId: string;
+}) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/epics?id=eq.${selectedEpicId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    let d = null;
+    try {
+      d = await res.json();
+    } catch {}
+    console.log(res);
+    return {
+      ok: res.ok,
+      status: res.status,
+      d,
+      error: res.ok ? null : d?.message || 'Request failed',
+      res,
+    };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      status: 0,
+      d: null,
+      error: err instanceof Error ? err.message : 'Network error',
+    };
   }
 }

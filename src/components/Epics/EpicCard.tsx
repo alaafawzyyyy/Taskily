@@ -3,6 +3,7 @@ import showmore from '../../../public/assets/icons/showmore.svg';
 import showmoreP from '../../../public/assets/icons/showmoreP.svg';
 import createdby from '../../../public/assets/icons/createdby.svg';
 import date from '../../../public/assets/icons/date.svg';
+import { useState } from 'react';
 
 export type Epic = {
   created_at: string;
@@ -21,10 +22,14 @@ export type Epic = {
 
 type Props = {
   data: Epic;
+  onEdit: () => void;
 };
 
-export function EpicCard({ data }: Props) {
+export function EpicCard({ data, onEdit }: Props) {
+  const [openMenu, setOpenMenu] = useState(false);
+
   function getInitials(name: string) {
+    if (!name || !name.trim()) return 'NA';
     const parts = name.trim().split(' ');
     if (parts.length === 1) {
       return parts[0].slice(0, 2).toUpperCase();
@@ -38,7 +43,7 @@ export function EpicCard({ data }: Props) {
     year: 'numeric',
   });
 
-  const DateP= new Date(data.created_at).toLocaleDateString('en-US', {
+  const DateP = new Date(data.created_at).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -55,16 +60,39 @@ export function EpicCard({ data }: Props) {
             TO DO
           </p>
         </div>
-        <Image
-          src={showmore}
-          alt="show more icon"
-          className="hidden md:block"
-        />
-        <Image
-          src={showmoreP}
-          alt="show more icon"
-          className="md:hidden block "
-        />
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMenu((prev) => !prev);
+          }}
+          className="relative px-3 "
+        >
+          <Image
+            src={showmore}
+            alt="show more icon"
+            className="hidden md:block"
+          />
+          <Image
+            src={showmoreP}
+            alt="show more icon"
+            className="md:hidden block "
+          />
+          {openMenu && (
+            <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border z-50">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                  setOpenMenu(false);
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm disabled:opacity-50"
+              >
+                {' '}
+                Edit Epic
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div className="pb-3">
         <p className="font-semibold text-5 leading-7 text-[#041B3C]">
@@ -75,7 +103,7 @@ export function EpicCard({ data }: Props) {
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
             <p className="md:bg-[#65DCA4] bg-[#003D9B] flex items-center justify-center rounded-xl py-[10px] md:w-10 md:h-10 w-7 h-7 text-center md:text-[14px] text-[10px] font-bold leading-5 text-white md:text-[#002113]">
-              {getInitials(data.assignee.name)}
+              {getInitials(data?.assignee?.name)}
             </p>
 
             <div className="flex flex-col">
@@ -83,7 +111,7 @@ export function EpicCard({ data }: Props) {
                 assignee
               </p>
               <p className="order-1 md:order-2 capitalize text-[14px] font-semibold leading-5 text-[#041B3C]">
-                {data.assignee.name}
+                {data.assignee?.name || 'Unassigned'}
               </p>
             </div>
           </div>
