@@ -62,7 +62,7 @@ type prop = {
 export async function GetEpics({ projectId, limit, offset }: prop) {
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}&limit=${limit}&offset=${offset}`,
+      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}&order=created_at.desc&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
