@@ -6,6 +6,7 @@ import notasks from '../../../public/assets/icons/notasks.svg';
 import date from '../../../public/assets/icons/date.svg';
 import { CreateEpicForm } from '../forms/CreateEpicForm';
 import { UpdateEpicFields } from './ShowEpics';
+import { getInitials } from '../lib/utils';
 
 type Props = {
   modee?: 'description' | 'edit';
@@ -55,16 +56,6 @@ export function PopUp({
     month: 'short',
     year: 'numeric',
   });
-
-  function getInitials(name: string) {
-    if (!name || !name.trim()) return 'NA';
-    const parts = name.trim().split(' ');
-    if (parts.length === 1) {
-      return parts[0].slice(0, 2).toUpperCase();
-    }
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
   return (
     <>
       {modee === 'description' ? (

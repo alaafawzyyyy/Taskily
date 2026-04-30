@@ -4,6 +4,7 @@ import showmoreP from '../../../public/assets/icons/showmoreP.svg';
 import createdby from '../../../public/assets/icons/createdby.svg';
 import date from '../../../public/assets/icons/date.svg';
 import { useState } from 'react';
+import { getInitials } from '../lib/utils';
 
 export type Epic = {
   created_at: string;
@@ -27,15 +28,6 @@ type Props = {
 
 export function EpicCard({ data, onEdit }: Props) {
   const [openMenu, setOpenMenu] = useState(false);
-
-  function getInitials(name: string) {
-    if (!name || !name.trim()) return 'NA';
-    const parts = name.trim().split(' ');
-    if (parts.length === 1) {
-      return parts[0].slice(0, 2).toUpperCase();
-    }
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
 
   const DateD = new Date(data.created_at).toLocaleDateString('en-GB', {
     day: '2-digit',
