@@ -149,13 +149,13 @@ export function CreateEpicForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`flex flex-col p-8 gap-8 bg-white mt-6 rounded-[15px] w-full ${
+      className={`flex flex-col p-8 gap-8 bg-white mt-6 rounded-15 w-full ${
         isSaving ? 'opacity-60 pointer-events-none' : ''
       }`}
     >
       {/* Project title */}
       <div className="flex flex-col gap-3">
-        <p className="font-semibold text-[22.5px] capitalize text-[#333333]">
+        <p className="font-semibold text-22.5 capitalize text-headtext">
           title
         </p>
         <input
@@ -174,16 +174,16 @@ export function CreateEpicForm({
             if (value === selectedEpic?.title) return;
             handleUpdate?.('title', value);
           }}
-          className="rounded-[15px] py-3 px-4 border-[1.5px] border-[#DDDDDD]"
+          className="rounded-15 py-3 px-4 border-1.5 border-border"
         />
-        <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
+        <p className=" flex gap-1 text-xs font-medium leading-4 text-error">
           {errors.title?.message}
         </p>
       </div>
 
       {/* Description */}
       <div className="flex flex-col gap-3">
-        <p className="font-semibold text-[22.5px] text-[#333333] capitalize flex justify-between">
+        <p className="font-semibold text-22.5 text-headtext capitalize flex justify-between">
           description
         </p>
         <textarea
@@ -194,14 +194,14 @@ export function CreateEpicForm({
             const value = e.target.value.trim();
             handleUpdate?.('description', value);
           }}
-          className=" h-[106px] rounded-[15px] pt-3 pb-[84px] px-4 border-[1.5px] border-[#DDDDDD]"
+          className=" h-106 rounded-15 pt-3 pb-84 px-4 border-1.5 border-border"
         />
       </div>
 
       {/* Assignee */}
 
-      <div className="flex flex-col gap-5 w-[306px]  justify-between">
-        <label className="font-semibold text-[22.5px] text-[#333333] capitalize">
+      <div className="flex flex-col gap-5 w-306 justify-between">
+        <label className="font-semibold text-22.5 text-headtext capitalize">
           assign to
         </label>
 
@@ -218,24 +218,21 @@ export function CreateEpicForm({
                 </option>
               ))}
             </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-xs">
-              ▼
-            </div>
-            <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
+            <p className=" flex gap-1 text-xs font-medium leading-4 text-error">
               {errors.assignee_id?.message}
             </p>
           </div>
         ) : !editAssignee ? (
           <div
             onClick={() => setEditAssignee(true)}
-            className="flex items-center gap-2 cursor-pointer rounded-md px-4 h-[36px]"
+            className="flex items-center gap-2 cursor-pointer rounded-md px-4 h-9"
           >
-            <div className="w-6 h-6 rounded-full bg-[#CDDDFF] flex items-center justify-center text-xs font-bold">
+            <div className="w-6 h-6 rounded-full bg-bg flex items-center justify-center text-xs font-bold">
               {members
                 .find((m) => m.user_id === assigneeId)
                 ?.metadata?.name?.slice(0, 2) || ''}
             </div>
-            <p className="text-sm text-[#64748B]">
+            <p className="text-sm text-slate">
               {members.find((m) => m.user_id === assigneeId)?.metadata?.name ||
                 'Unassigned'}
             </p>
@@ -259,7 +256,7 @@ export function CreateEpicForm({
               });
             }}
             autoFocus
-            className="text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
+            className="text-start text-slate h-9 w-full rounded-md px-4 border border-border appearance-none text-14 leading-9"
           >
             <option value="">Unassigned</option>
             {members.map((m: Member) => (
@@ -275,8 +272,8 @@ export function CreateEpicForm({
       </div>
 
       {/* deadline */}
-      <div className="flex flex-col gap-5 w-[306px]  justify-between">
-        <label className="font-semibold text-[22.5px] text-[#333333] capitalize flex justify-between">
+      <div className="flex flex-col gap-5 w-306 justify-between">
+        <label className="font-semibold text-22.5 text-headtext capitalize flex justify-between">
           deadline
         </label>
         <input
@@ -289,9 +286,9 @@ export function CreateEpicForm({
 
             handleUpdate?.('deadline', value);
           }}
-          className=" text-start text-[#64748B] h-[36px] w-full rounded-md px-4 border border-[#DDDDDD] appearance-none text-[14px] leading-[36px]"
+          className=" text-start text-slate h-9 w-full rounded-md px-4 border border-border appearance-none text-14 leading-9"
         />
-        <p className=" flex gap-1 text-[12px] font-medium leading-4 text-[#BA1A1A]">
+        <p className=" flex gap-1 text-xs font-medium leading-4 text-error">
           {errors.deadline?.message}
         </p>
       </div>
@@ -300,13 +297,13 @@ export function CreateEpicForm({
       <div className="flex py-6 pt-4 gap-6 justify-end">
         {mode === 'submit' && (
           <>
-            <button className="rounded-[15px] md:w-[182px] py-4 md:py-3 px-6 md:px-8 text-[14px] font-bold leading-5 text-white bg-[#036EFF]">
+            <button className="rounded-15 md:w-182 py-4 md:py-3 px-6 md:px-8 text-14 font-bold leading-5 text-white bg-accent">
               Create
             </button>
             <button
               type="button"
               onClick={() => router.push(`/project/${projectId}/epics`)}
-              className=" rounded-[15px] md:w-[182px] py-3 px-6 text-[14px] font-bold leading-5 text-[#036EFF] bg-[#EEF4FB]"
+              className=" rounded-[15px] md:w-[182px] py-3 px-6 text-[14px] font-bold leading-5 text-bgg bg-wh"
             >
               Cancel
             </button>

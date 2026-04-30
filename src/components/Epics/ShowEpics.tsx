@@ -231,20 +231,20 @@ export function ShowEpics() {
         buttonimage={createepic}
         onClick={() => router.push(`/project/${projectId}/epics/new`)}
       />
-      <div className="flex gap-6 w-[672px] ">
+      <div className="flex gap-6 w-672 ">
         {footerDate.slice(0, limit).map((data, id) => (
           <div
             key={id}
-            className="bg-[#F1F3FF] p-4 rounded-lg border flex flex-col gap-1"
+            className="bg-surface-low p-4 rounded-lg border flex flex-col gap-1"
           >
             <Image
               src={data.img}
               alt={data.img}
             />
-            <p className="text-[#041B3C] font-semibold text-[16px] leading-6">
+            <p className="text-slate-900 font-semibold text-base leading-6">
               {data.title}
             </p>
-            <p className="text-[12px] leading-[19.5px] text-[#434654]">
+            <p className="text-xs leading-5 text-mid">
               {data.message}{' '}
             </p>
           </div>
@@ -252,7 +252,7 @@ export function ShowEpics() {
       </div>
     </div>
   ) : (
-    <div className="w-full max-w-[1024px] flex flex-col h-full md:gap-16 gap-6 px-3">
+    <div className="w-full max-w-1024 flex flex-col h-full md:gap-16 gap-6 px-3">
       <ShowEpicsHeader projectId={projectId} />
       <div className="grid md:grid-cols-2 grid-cols-1 md:grid-rows-3 gap-6 mb-24 md:mb-0">
         {epics?.map((epic) => (
@@ -286,7 +286,7 @@ export function ShowEpics() {
         href={`/project/${projectId}/epics/new`}
         className="fixed bottom-20 right-6 md:hidden z-50"
       >
-        <div className="md:hidden flex justify-center rounded-xl items-center w-14 h-14 bg-gradient-to-b from-[#003D9B] to-[#0052CC]">
+        <div className="md:hidden flex justify-center rounded-xl items-center w-14 h-14 bg-gradient-to-b from-primary to-primary-container">
           <Image
             src={plus}
             alt="plus icon"
