@@ -6,6 +6,7 @@ import notasks from '../../../public/assets/icons/notasks.svg';
 import date from '../../../public/assets/icons/date.svg';
 import { CreateEpicForm } from '../forms/CreateEpicForm';
 import { UpdateEpicFields } from './ShowEpics';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   modee?: 'description' | 'edit';
@@ -20,6 +21,7 @@ type Props = {
   ) => void;
   extraData?: Partial<UpdateEpicFields>;
   isSaving: boolean;
+  projectId?:string
 };
 
 export type Pop = {
@@ -45,8 +47,11 @@ export function PopUp({
   selectedEpic,
   setIsModalOpen,
   handleUpdate,
+  projectId,
   isSaving,
 }: Props) {
+  const router = useRouter();
+
   if (!isOpen) return null;
   if (!selectedEpic) return null;
 
@@ -65,14 +70,19 @@ export function PopUp({
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
+  const handleAddTask = () => {
+    router.push(
+      `/project/${projectId}/tasks/new?epicId=${selectedEpic.epic_id}`,
+    );
+  };
   return (
     <>
       {modee === 'description' ? (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         >
-          <div className="flex flex-col max-w-672 max-h-90 overflow-y-auto rounded-lg bg-white">
+          <div className="flex flex-col max-w-672 max-h-[90vh] overflow-y-auto rounded-lg bg-white">
             <div className="border-b flex justify-between p-8 border-slate-300">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -105,11 +115,11 @@ export function PopUp({
 
               <div className="grid grid-cols-3 gap-6 items-center">
                 <div className="flex flex-col justify-start gap-8.5">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
                     CREATED BY
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-white text-10 leading-15 font-bold">
+                    <div className="w-7 h-7 rounded-full bg-primary-light flex items-center justify-center text-white text-bodyxs leading-15 font-bold">
                       {selectedEpic?.created_by.name
                         ? getInitials(selectedEpic?.created_by.name)
                         : 'NA'}
@@ -121,11 +131,11 @@ export function PopUp({
                 </div>
 
                 <div className="flex flex-col justify-start gap-2">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
                     Assignee
                   </p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-bg flex items-center justify-center text-51617E text-10 leading-15 font-bold">
+                  <div className="flex items-center gap-2 ">
+                    <div className="w-7 h-7 rounded-full bg-bg-light flex items-center justify-center text-accent-muted text-bodyxs leading-15 font-bold">
                       {getInitials(selectedEpic?.assignee.name)}
                     </div>
                     <p className="text-sm font-medium text-slate-900 leading-5">
@@ -135,7 +145,7 @@ export function PopUp({
                 </div>
 
                 <div className="flex flex-col justify-start gap-2">
-                  <p className="font-bold text-10 leading-15 text-slate-900-op66 uppercase">
+                  <p className="font-bold text-bodyxs leading-15 text-text-primary-60 uppercase">
                     CREATED at
                   </p>
                   <div className="flex items-center gap-2">
@@ -150,18 +160,18 @@ export function PopUp({
 
               <div className="flex flex-col gap-6">
                 <div className="flex gap-6 justify-between items-center">
-                  <p className="font-semibold text-18 leading-5 ">Tasks</p>
+                  <p className="font-semibold text-bodylg leading-5 ">Tasks</p>
                   <button>
                     <Image
                       src={plus}
                       alt="plus icon"
                     />
-                    <p className="font-semibold text-14 leading-7 text-primary">
+                    <p className="font-semibold text-bodysm leading-7 text-primary h-9">
                       Add Task
                     </p>
                   </button>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-surface-low">
+                <div className="flex flex-col justify-center items-center gap-3 rounded-lg border-[2px] border-dashed p-12 bg-dark">
                   <Image
                     src={notasks}
                     alt="no tasks icon"
@@ -169,7 +179,10 @@ export function PopUp({
                   <p className="pt-4 font-medium text-base leadin-6">
                     No tasks have been added to this epic yet
                   </p>
-                  <button className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm">
+                  <button
+                    onClick={handleAddTask}
+                    className="bg-primary text-white py-10 px-6 flex gap-2 rounded-sm"
+                  >
                     <Image
                       src={plus}
                       alt="plus icon"
