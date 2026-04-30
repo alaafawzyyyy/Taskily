@@ -22,6 +22,7 @@ type Props = {
   ) => void;
   extraData?: Partial<UpdateEpicFields>;
   isSaving: boolean;
+  projectId?:string
 };
 
 export type Pop = {
