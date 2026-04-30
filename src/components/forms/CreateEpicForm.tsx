@@ -26,21 +26,21 @@ type Member = {
 export const createEpicSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters.'),
   description: z.string().optional(),
-  assignee_id: z
-    .string()
-    .min(1, 'Please select a member')
-    .optional()
-    .nullable(),
-  deadline: z
-    .string()
-    .min(1, 'Please select a date')
-    .refine((value) => {
-      return value >= today;
-    }, 'Deadline must be today or later')
-    .optional()
-    .nullable(),
+  assignee_id: z.string().min(1, 'Please select a member'),
+  deadline: z.string().min(1, 'Please select a date'),
 });
-type FormData = z.infer<typeof createEpicSchema>;
+
+export const editEpicSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 characters.'),
+  description: z.string().optional(),
+  assignee_id: z.string().optional().nullable(),
+  deadline: z.string().optional().nullable(),
+});
+
+type CreateFormData = z.infer<typeof createEpicSchema>;
+type EditFormData = z.infer<typeof editEpicSchema>;
+
+export type FormData = CreateFormData | EditFormData;
 
 export function CreateEpicForm({
   mode,
@@ -49,7 +49,7 @@ export function CreateEpicForm({
   selectedEpic,
   isSaving,
 }: {
-  mode?: 'submit' | 'blur';
+  mode: 'submit' | 'blur';
   onUpdate?: (fields: Partial<FormData>) => void;
   selectedEpicId?: string;
   isSaving?: boolean;
@@ -67,6 +67,8 @@ export function CreateEpicForm({
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : '';
 
+  const schema = mode === 'submit' ? createEpicSchema : editEpicSchema;
+
   const {
     register,
     handleSubmit,
@@ -75,7 +77,7 @@ export function CreateEpicForm({
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(createEpicSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       title: '',
       description: '',
