@@ -54,15 +54,26 @@ export async function CreateEbic(data: epicData) {
 
 // Get Epics
 type prop = {
-  limit: number;
-  offset: number;
+  limit?: number;
+  offset?: number;
   projectId: string;
 };
 
 export async function GetEpics({ projectId, limit, offset }: prop) {
+  const query = new URLSearchParams({
+    project_id: `eq.${projectId}`,
+  });
+
+  if (limit !== undefined) {
+    query.append('limit', String(limit));
+  }
+
+  if (offset !== undefined) {
+    query.append('offset', String(offset));
+  }
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/project_epics?project_id=eq.${projectId}&limit=${limit}&offset=${offset}`,
+      `${SUPABASE_URL}/rest/v1/project_epics?${query.toString()}`,
       {
         method: 'GET',
         headers: {

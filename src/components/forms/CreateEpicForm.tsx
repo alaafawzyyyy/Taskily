@@ -3,24 +3,15 @@ import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { CreateEbic, GetEpicDetails } from '../lib/api/epics';
 import { useEffect, useState } from 'react';
-import { getProjectMembers } from '../lib/api/ProjectAPI';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { useWatch } from 'react-hook-form';
 import { UpdateEpicFields } from '../Epics/ShowEpics';
 import { Pop } from '../Epics/PopUP';
+import { member, useProjectMembers } from '@/hooks/getMembers';
 
 const today = new Date().toISOString().split('T')[0];
-type Member = {
-  user_id: string;
-  email: string;
-  role: string;
-  metadata: {
-    name: string;
-    email: string;
-  };
-};
 
 // Validation
 export const createEpicSchema = z.object({
@@ -62,12 +53,13 @@ export function CreateEpicForm({
 }) {
   const router = useRouter();
   const [editAssignee, setEditAssignee] = useState(false);
-  const [members, setMembers] = useState<Member[]>([]);
   const params = useParams();
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : '';
 
   const schema = mode === 'submit' ? createEpicSchema : editEpicSchema;
+  // getting members
+  const members = useProjectMembers(projectId);
 
   const {
     register,
@@ -127,19 +119,6 @@ export function CreateEpicForm({
 
     fetch();
   }, [selectedEpicId, projectId, reset]);
-
-  // getting members
-  useEffect(() => {
-    if (!projectId) return;
-
-    const fetchMembers = async () => {
-      const res = await getProjectMembers({ projectId });
-      if (res.ok) {
-        setMembers(res.data);
-      }
-    };
-    fetchMembers();
-  }, [projectId]);
 
   const assigneeId = useWatch({
     control,
@@ -259,7 +238,7 @@ export function CreateEpicForm({
             className="text-start text-slate h-9 w-full rounded-md px-4 border border-border appearance-none text-14 leading-9"
           >
             <option value="">Unassigned</option>
-            {members.map((m: Member) => (
+            {members.map((m: member) => (
               <option
                 key={m.user_id}
                 value={m.user_id}
