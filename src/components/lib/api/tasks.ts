@@ -89,14 +89,14 @@ export async function GetTasks({
   projectId,
   epicId,
   status,
-  limit,
-  offset,
+  limit=10,
+  offset=0,
 }: {
   projectId: string;
   epicId?: string;
   status?: string;
-  limit: number;
-  offset: number;
+  limit?: number 
+  offset?: number;
 }) {
   let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
 
