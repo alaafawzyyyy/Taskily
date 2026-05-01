@@ -3,16 +3,17 @@ import { CalendarIcon } from '../icons/Calendar';
 import { UnAssignedIcon } from '../icons/Unassigned';
 import { formatDate2ENUS } from '../lib/utils/dateFormatter';
 
-export type Task = {
+export type TaskCard = {
   id: string;
   title: string;
   status: string;
   due_date: string
   assignee_initials?: string;
+  task_id:'string'
 };
 
 type Props = {
-  tasks: Task[];
+  tasks: TaskCard[];
 };
 
 export function TaskCard({ tasks }: Props) {

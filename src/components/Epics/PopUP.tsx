@@ -14,6 +14,7 @@ import { TasksList } from '../Tasks/TasksList';
 import { EmptyTask } from '../Tasks/EmptyTask';
 import { SkeletonList } from '../Tasks/skeleton';
 
+
 type Props = {
   modeForm?: 'description' | 'edit';
   isOpen: boolean;
@@ -79,7 +80,7 @@ export function PopUp({
       setError(null);
 
       try {
-        const res = await GetTasksAPI(selectedEpic?.id);
+        const res = await GetTasksAPI(selectedEpic.id);
         setTasks(res.data || []);
       } catch (err) {
         setError('Failed to load tasks');

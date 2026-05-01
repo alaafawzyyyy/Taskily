@@ -48,7 +48,7 @@ export async function addTask(data: TaskData) {
   }
 }
 
-// get tasks
+// get tasks by epic
 export async function GetTasksAPI(Epic_Id: string) {
   try {
     const res = await fetch(
@@ -85,19 +85,37 @@ export async function GetTasksAPI(Epic_Id: string) {
 }
 
 // get tasks
-export async function GetTasksStatusAPI(projectId: string, status: string) {
+export async function GetTasks({
+  projectId,
+  epicId,
+  status,
+}: {
+  projectId: string;
+  epicId?: string;
+  status?: string;
+}) {
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}&status=eq.${status}&order=created_at.desc`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          apikey: SUPABASE_ANON_KEY!,
-          'Content-Type': 'application/json',
-        },
+    let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
+
+    if (epicId) {
+      url += `&epic_id=eq.${epicId}`;
+    }
+
+    if (status) {
+      url += `&status=eq.${status}`;
+    }
+
+    url += `&order=created_at.desc`;
+
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: SUPABASE_ANON_KEY!,
+        'Content-Type': 'application/json',
       },
-    );
+    });
+
     let data = null;
     try {
       data = await res.json();

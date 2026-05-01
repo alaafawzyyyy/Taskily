@@ -1,4 +1,4 @@
-import { GetTasksStatusAPI } from '@/components/lib/api/tasks';
+import { GetTasks } from '@/components/lib/api/tasks';
 import { useEffect, useState } from 'react';
 
 export function useGetTasksByStatus(projectId: string, status: string) {
@@ -7,7 +7,7 @@ export function useGetTasksByStatus(projectId: string, status: string) {
     if (!projectId || !status) return;
 
     const fetchTasks = async () => {
-      const res = await GetTasksStatusAPI(projectId, status);
+      const res = await GetTasks({ projectId, status });
       if (res.ok) {
         setTasks(res.data || []);
       } else {

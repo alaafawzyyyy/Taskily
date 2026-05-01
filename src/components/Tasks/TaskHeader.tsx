@@ -4,8 +4,13 @@ import { BoardViewIcon } from '../icons/BoardView';
 import { SearchIcon } from '../icons/Search';
 import { TaskButton } from '../icons/TaskButton';
 import { Path } from '../ui/Path';
+import { useSearchParams , useRouter } from 'next/navigation';
 
 export function TaskHeader() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view') || 'board';
+
   return (
     <div className="flex flex-col w-full gap-8 pt-9 pb-6 ">
       <div className="hidden md:flex gap-2 items-center">
@@ -49,9 +54,17 @@ export function TaskHeader() {
           </div>
           <button className="flex items-center gap-2 rounded-less px-4 py-2 border bg-white hover:bg-gray-50">
             <BoardViewIcon />
-            <select className="text-bodysm leading-5 font-medium text-text-primary w-full">
-              <option>Board View</option>
-              <option>List View</option>
+            <select
+              value={view}
+              onChange={(e) => {
+                const newView = e.target.value;
+
+                router.push(`?view=${newView}`);
+              }}
+              className="text-bodysm leading-5 font-medium text-text-primary w-full"
+            >
+              <option value="board">Board View</option>
+              <option value="List">List View</option>
             </select>
           </button>
           <div className="flex items-center justify-center">
