@@ -38,7 +38,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   };
   return (
     <div
-      className={`md:flex flex-col  p-4 ${isOpen ? 'w-[256px]' : 'hidden md:w-20'} bg-[#F1F3FF]`}
+      className={`md:flex flex-shrink-0 flex-col  p-4 ${isOpen ? 'w-256' : 'hidden md:w-80'} bg-surface`}
     >
       {/* Logo */}
       <div>

@@ -37,7 +37,7 @@ module.exports = {
         'slate-300/30': '#C3C6D64D',
         'slate-300/15': '#C3C6D626',
         slate: '#64748B',
-
+        slate10: '#6B7280',
         accent: '#036EFF',
         'accent-muted': '#51617E',
 
@@ -51,6 +51,7 @@ module.exports = {
       borderWidth: { 1.5: '1.5px', 1: '1', 2: '2' },
       borderRadius: {
         bodys: '15px',
+        less: '4px',
       },
       fontSize: {
         bodyxs: '10px',
@@ -65,12 +66,14 @@ module.exports = {
         26: '106px',
         45: '182px',
         76: '306px',
-        256: '1024px',
+        1024: '1024px',
         672: '672px',
         8.5: '8.5px',
         10: '10px',
         15: '15px',
         20: '20px',
+        256: '256px',
+        80:"80px"
       },
       letterSpacing: {
         tight: '0.6px',

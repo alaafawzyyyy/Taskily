@@ -53,7 +53,7 @@ export default function Home({ children }: childrenProps) {
           </div>
         </div>
       ) : (
-          <div className="flex w-full min-h-0 h-screen bg-[#F9F9FF]">
+          <div className="flex w-full min-h-0 h-screen overflow-x-hidden bg-[#F9F9FF]">
             <Sidebar
               isOpen={isOpen}
               setIsOpen={setIsOpen}
