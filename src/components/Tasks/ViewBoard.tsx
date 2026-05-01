@@ -2,9 +2,12 @@
 import { useParams } from 'next/navigation';
 import { statusOptions } from '../forms/CreateTaskForm';
 import { TaskColumn } from './TaskColumn';
-;
 
-export function ViewBoard() {
+type Props = {
+  onSelectTask: (id: string) => void;
+};
+
+export function ViewBoard({ onSelectTask }: Props) {
   const params = useParams();
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : '';
@@ -16,6 +19,7 @@ export function ViewBoard() {
           key={i}
           projectId={projectId}
           col={col}
+          onTaskClick={(id) => onSelectTask(id)}
         />
       ))}
     </div>

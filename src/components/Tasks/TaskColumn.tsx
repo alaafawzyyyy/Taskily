@@ -10,9 +10,10 @@ type Props = {
     label: string;
     value: string;
   };
+  onTaskClick: (id: string) => void;
 };
 
-export function TaskColumn({ projectId, col }: Props) {
+export function TaskColumn({ projectId, col,onTaskClick }: Props) {
   const tasks = useGetTasksByStatus(projectId, col.value);
 
   return (
@@ -40,7 +41,7 @@ export function TaskColumn({ projectId, col }: Props) {
           <p className="text-xs font-bold text-text-mid/60">ADD NEW TASK</p>
         </Link>
 
-        <TaskCard tasks={tasks} />
+        <TaskCard tasks={tasks}  onTaskClick={onTaskClick}/>
       </div>
     </div>
   );

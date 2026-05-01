@@ -7,16 +7,17 @@ export type TaskCard = {
   id: string;
   title: string;
   status: string;
-  due_date: string
+  due_date: string;
   assignee_initials?: string;
-  task_id:'string'
+  task_id: 'string';
 };
 
 type Props = {
   tasks: TaskCard[];
+  onTaskClick: (id: string) => void;
 };
 
-export function TaskCard({ tasks }: Props) {
+export function TaskCard({ tasks, onTaskClick }: Props) {
   return (
     <div className="flex flex-col gap-3">
       {tasks.length === 0 ? (
@@ -24,8 +25,9 @@ export function TaskCard({ tasks }: Props) {
       ) : (
         tasks.map((task) => (
           <div
+            onClick={() => onTaskClick(task.id)}
             key={task.id}
-            className="bg-white p-4 rounded-lg border shadow-sm flex flex-col gap-4"
+            className="bg-white p-4 rounded-lg border shadow-sm flex flex-col gap-4 cursor-pointer"
           >
             <p className="text-sm font-medium leading-5 text-slate-900">
               {task.title}

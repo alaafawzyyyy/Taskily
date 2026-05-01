@@ -5,7 +5,11 @@ import { GetTasks } from '../lib/api/tasks';
 import { TaskCard } from './TaskCard';
 import { useParams } from 'next/navigation';
 
-export function ListView() {
+type Props = {
+  onSelectTask: (id: string) => void;
+};
+
+export function ListView({ onSelectTask }: Props) {
   const [tasks, setTasks] = useState<TaskCard[]>([]);
 
   const params = useParams();
@@ -45,7 +49,11 @@ export function ListView() {
         {/* Tasks */}
         {/* footer */}
       </div>
-      <TaskListCard tasks={tasks} />
+
+      <TaskListCard
+        tasks={tasks}
+        onTaskClick={(id) => onSelectTask(id)}
+      />
     </>
   );
 }

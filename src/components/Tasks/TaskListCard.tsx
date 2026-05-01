@@ -14,9 +14,10 @@ export type Task = {
 
 type Props = {
   tasks: Task[];
+  onTaskClick: (id: string) => void;
 };
 
-export function TaskListCard({ tasks }: Props) {
+export function TaskListCard({ tasks, onTaskClick }: Props) {
   return (
     <div className="flex flex-col">
       {tasks.length === 0 ? (
@@ -24,8 +25,12 @@ export function TaskListCard({ tasks }: Props) {
       ) : (
         tasks.map((task) => (
           <div
+            onClick={() => {
+              console.log('clicked');
+              onTaskClick(task.id);
+            }}
             key={task.id}
-            className="bg-white  py-3 rounded-lg border-t grid grid-cols-7 items-center"
+            className="bg-white  py-3 rounded-lg border-t grid grid-cols-7 items-center cursor-pointer"
           >
             <div className="flex justify-center items-center py-18.5 px-6">
               <p className="text-sm leading-4 text-primary">{task.task_id}</p>
