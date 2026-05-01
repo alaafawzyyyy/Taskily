@@ -7,8 +7,16 @@ import { useRouter } from 'next/navigation';
 
 type Props = {
   projectId?: string;
+  onSearch: (value: string) => void;
+  search: string;
+  onClear: () => void;
 };
-export function ShowEpicsHeader({ projectId }: Props) {
+export function ShowEpicsHeader({
+  projectId,
+  onSearch,
+  search,
+  onClear,
+}: Props) {
   const router = useRouter();
   return (
     <div className=" flex h-[64px] md:top-8  justify-between relative items-end w-full">
@@ -35,9 +43,20 @@ export function ShowEpicsHeader({ projectId }: Props) {
       </div>
       <div className="h-[46px] flex gap-4 justify-center w-full md:w-[500px]">
         <input
-          placeholder="Search ebics..."
+          value={search}
+          placeholder="Search epics..."
+          onChange={(e) => onSearch(e.target.value)}
+          autoFocus
           className=" bg-[rgb(215,226,255)] p-2 rounded-sm w-full md:w-[303px]"
         />
+        {search && (
+          <button
+            onClick={onClear}
+            className="px-3 bg-gray-200 rounded-sm text-sm"
+          >
+            Clear
+          </button>
+        )}
         <CreateButton
           src={plus}
           alt="Add member icon"

@@ -57,9 +57,9 @@ type prop = {
   limit?: number;
   offset?: number;
   projectId: string;
+  search?: string;
 };
-
-export async function GetEpics({ projectId, limit, offset }: prop) {
+export async function GetEpics({ projectId, limit, offset, search }: prop) {
   const query = new URLSearchParams({
     project_id: `eq.${projectId}`,
   });
@@ -71,6 +71,10 @@ export async function GetEpics({ projectId, limit, offset }: prop) {
   if (offset !== undefined) {
     query.append('offset', String(offset));
   }
+  if (search) {
+    query.append('title', `ilike.%25${search}%25`);
+  }
+
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/project_epics?${query.toString()}`,
