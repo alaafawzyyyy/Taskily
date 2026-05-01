@@ -2,13 +2,16 @@
 import { ShowMoreIcon } from '../icons/ShowMore';
 import { UnAssignedIcon } from '../icons/Unassigned';
 import { formatDateENGB } from '../lib/utils/dateFormatter';
+import { getInitials } from '../lib/utils/initials';
 
 export type Task = {
   id: string;
   title: string;
   status: string;
   due_date: string;
-  assignee_initials?: string;
+  assignee: {
+    name: string;
+  };
   task_id: string;
 };
 
@@ -30,11 +33,9 @@ export function TaskListCard({ tasks, onTaskClick }: Props) {
               onTaskClick(task.id);
             }}
             key={task.id}
-            className="bg-white  py-3 rounded-lg border-t grid grid-cols-7 items-center cursor-pointer"
+            className="bg-white h-12 py-3 px-3 rounded-lg border-t grid grid-cols-7 items-start cursor-pointer justify-center "
           >
-            <div className="flex justify-center items-center py-18.5 px-6">
-              <p className="text-sm leading-4 text-primary">{task.task_id}</p>
-            </div>
+            <p className="text-sm leading-4 text-primary">{task.task_id}</p>
 
             <div className="col-span-2 font-medium text-sm text-text-primary">
               {task.title}
@@ -52,14 +53,15 @@ export function TaskListCard({ tasks, onTaskClick }: Props) {
 
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold">
-                {task.assignee_initials ? (
-                  task.assignee_initials
+                {task.assignee?.name ? (
+                  getInitials(task.assignee?.name)
                 ) : (
                   <div className="w-6 h-6 rounded-xl border-[2px] flex items-center justify-center bg-[#E0E8FF]">
                     <UnAssignedIcon />
                   </div>
                 )}
               </div>
+              <p className="text-bodysm text-text-primary">{task.assignee?.name}</p>
             </div>
 
             <div className="flex justify-end">

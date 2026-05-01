@@ -25,8 +25,8 @@ export default function ProjectFooter({
   return (
     <div className=" hidden px-2 pt-12 md:flex justify-between items-center">
       <p className="text-[#434654] text-[12px] leading-4 font-medium ">
-        Showing 
-        {` ${currentPage=== totalPages? total : currentPage*5}
+        Showing
+        {` ${currentPage === totalPages ? total : currentPage * 5}
          of ${total} active projects`}
       </p>
       <div className="flex gap-2">
@@ -39,7 +39,6 @@ export default function ProjectFooter({
           number={currentPage}
           color="#003D9B"
         />
-        <PaginationButton number={currentPage + 1} />
         <PaginationButton
           number=">"
           onClick={Next}

@@ -89,30 +89,45 @@ export async function GetTasks({
   projectId,
   epicId,
   status,
+  limit,
+  offset,
 }: {
   projectId: string;
   epicId?: string;
   status?: string;
+  limit: number;
+  offset: number;
 }) {
+  let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
+
+  if (epicId) {
+    url += `&epic_id=eq.${epicId}`;
+  }
+
+  if (status) {
+    url += `&status=eq.${status}`;
+  }
+
+  url += `&limit=${limit}&offset=${offset}&order=created_at.desc`;
+  const query = new URLSearchParams({
+    project_id: `eq.${projectId}`,
+  });
+
+  if (limit !== undefined) {
+    query.append('limit', String(limit));
+  }
+
+  if (offset !== undefined) {
+    query.append('offset', String(offset));
+  }
   try {
-    let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
-
-    if (epicId) {
-      url += `&epic_id=eq.${epicId}`;
-    }
-
-    if (status) {
-      url += `&status=eq.${status}`;
-    }
-
-    url += `&order=created_at.desc`;
-
     const res = await fetch(url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         apikey: SUPABASE_ANON_KEY!,
         'Content-Type': 'application/json',
+        Prefer: 'count=exact',
       },
     });
 

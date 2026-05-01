@@ -8,7 +8,9 @@ export type TaskCard = {
   title: string;
   status: string;
   due_date: string;
-  assignee_initials?: string;
+  assignee: {
+    name: string;
+  };
   task_id: 'string';
 };
 
@@ -42,7 +44,7 @@ export function TaskCard({ tasks, onTaskClick }: Props) {
               </div>
 
               <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs">
-                {task.assignee_initials || <UnAssignedIcon />}
+                {task.assignee.name || <UnAssignedIcon />}
               </div>
             </div>
           </div>
