@@ -83,3 +83,39 @@ export async function GetTasksAPI(Epic_Id: string) {
     };
   }
 }
+
+// get tasks
+export async function GetTasksStatusAPI(projectId: string, status: string) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}&status=eq.${status}&order=created_at.desc`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
+
+    return {
+      ok: res.ok,
+      status: res.status,
+      data,
+      error: res.ok ? null : data?.message || 'Request failed',
+      res,
+    };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      status: 0,
+      data: null,
+      error: err instanceof Error ? err.message : 'Network error',
+    };
+  }
+}

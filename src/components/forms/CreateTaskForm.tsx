@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { addTask } from '../lib/api/tasks';
 import toast from 'react-hot-toast';
 
-const statusOptions = [
+export const statusOptions = [
   { value: 'TO_DO', label: 'TO DO' },
   { value: 'IN_PROGRESS', label: 'IN PROGRESS' },
   { value: 'BLOCKED', label: 'BLOCKED' },
@@ -43,6 +43,10 @@ export function CreateTaskForm() {
   const searchParams = useSearchParams();
   const epicId = searchParams.get('epicId') || '';
 
+  const status = searchParams.get('status') || undefined;
+  const allowed = statusOptions.map((s) => s.value);
+  const safeStatus = allowed.includes(status || '') ? status : 'TO_DO';
+
   const router = useRouter();
   const {
     register,
@@ -53,7 +57,7 @@ export function CreateTaskForm() {
   } = useForm<CreateTaskFormData>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
-      status: 'TO_DO',
+      status: safeStatus,
     },
   });
 

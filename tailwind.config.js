@@ -7,6 +7,7 @@ module.exports = {
         primary: '#003d9b',
         'primary-light': '#0052cc',
 
+        light: '#E0E8FF',
         background: '#f9f9ff',
         surface: '#f1f3ff',
         'surface-strong': '#d7e2ff',
@@ -23,6 +24,7 @@ module.exports = {
         'text-secondary': '#4f5f7b',
         'text-heading': '#333333',
         'text-mid': '#434654',
+        'text-mid/60': '#43465499',
         'text-icon': '#9ca3af',
 
         'text-primary-60': '#041B3C99',
@@ -73,7 +75,8 @@ module.exports = {
         15: '15px',
         20: '20px',
         256: '256px',
-        80:"80px"
+        80: '80px',
+        280: '280px',
       },
       letterSpacing: {
         tight: '0.6px',

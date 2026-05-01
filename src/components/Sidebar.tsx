@@ -83,7 +83,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             </Link>
             {/* Project Tasks */}
             <Link
-              href={`/project/${projectId}/tasks`}
+              href={`/project/${projectId}/tasks?view=board`}
               className={`flex items-center rounded-[4px] py-[10px] px-3 gap-3 ${
                 pathname.includes('/tasks')
                   ? 'bg-white text-[#003D9B]'

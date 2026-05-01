@@ -1,7 +1,6 @@
 'use client';
 import space from '../../../public/assets/icons/space.svg';
 import { BoardViewIcon } from '../icons/BoardView';
-import { DropDownIcon } from '../icons/DropDown';
 import { SearchIcon } from '../icons/Search';
 import { TaskButton } from '../icons/TaskButton';
 import { Path } from '../ui/Path';
@@ -50,10 +49,10 @@ export function TaskHeader() {
           </div>
           <button className="flex items-center gap-2 rounded-less px-4 py-2 border bg-white hover:bg-gray-50">
             <BoardViewIcon />
-            <span className="text-bodysm leading-5 font-medium text-text-primary">
-              Board View
-            </span>
-            <DropDownIcon />
+            <select className="text-bodysm leading-5 font-medium text-text-primary w-full">
+              <option>Board View</option>
+              <option>List View</option>
+            </select>
           </button>
           <div className="flex items-center justify-center">
             <TaskButton />
