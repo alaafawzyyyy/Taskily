@@ -5,7 +5,6 @@ import { getInitials } from '../lib/utils/initials';
 
 type Props = {
   tasks: Task[];
-  onTaskClick: (id: string) => void;
 };
 
 type Task = {
@@ -17,12 +16,11 @@ type Task = {
   due_date?: string;
 };
 
-export function TasksList({ tasks, onTaskClick }: Props) {
+export function TasksList({ tasks }: Props) {
   return (
     <div className="flex flex-col w-full rounded-lg border-1 border-slate-300/15 bg-white">
       {tasks.map((task) => (
         <div
-          onClick={() => onTaskClick(task.id)}
           key={task.id}
           className="flex cursor-pointer items-center justify-between p-4 border-t border-gray-200 hover:bg- gray/50"
         >

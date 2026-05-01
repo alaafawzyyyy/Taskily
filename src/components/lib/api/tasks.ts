@@ -137,3 +137,32 @@ export async function GetTasks({
     };
   }
 }
+
+type GetTaskDetailsProp = {
+  projectId: string;
+  taskId: string;
+};
+// get task details
+export async function GetTaskDetails({
+  projectId,
+  taskId,
+}: GetTaskDetailsProp) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}&id=eq.${taskId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          apikey: SUPABASE_ANON_KEY!,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const data = await res.json();
+
+    return data[0];
+  } catch (err) {
+    console.log(err);
+  }
+}

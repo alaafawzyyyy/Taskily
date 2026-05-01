@@ -1,9 +1,78 @@
+import { useEffect, useState } from 'react';
+import { GetTaskDetails } from '../lib/api/tasks';
+import { useParams } from 'next/navigation';
+import { getInitials } from '../lib/utils/initials';
+import { UnAssignedIcon } from '../icons/Unassigned';
+import { formatDateENGB } from '../lib/utils/dateFormatter';
+
 type Props = {
   taskId: string;
   onClose: () => void;
 };
+type Task = {
+  id: string;
+  task_id: string;
+  epic: {
+    epic_id: string;
+  };
+  title: string;
+  description?: string;
+  status?: string;
+  due_date?: string;
+  assignee?: {
+    name?: string;
+  };
+  created_by: {
+    name: string;
+  };
+  created_at: string;
+};
 
 export function TaskDetails({ taskId, onClose }: Props) {
+  const [task, setTask] = useState<Task>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const params = useParams();
+  const projectId =
+    typeof params.projectId === 'string' ? params.projectId : '';
+
+  useEffect(() => {
+    const fetchTask = async () => {
+      if (!taskId) return;
+
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await GetTaskDetails({ projectId, taskId });
+        setTask(res);
+        console.log(res);
+      } catch (err) {
+        setError('Failed to load task');
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTask();
+  }, [taskId, projectId]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/30">
+        <p className="text-white">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/30">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
       <div
@@ -20,30 +89,25 @@ export function TaskDetails({ taskId, onClose }: Props) {
             <div className=" flex flex-col border-b-1 py-6 px-8 gap-2 border-borderlight">
               <div className="flex gap-3">
                 <div className="rounded-sm px-2 py-/2 bg-calm font-bold text-bodysm leading-4 text-primary flex justify-center items-center ">
-                  TASK-125
+                  {task?.task_id}
                 </div>
 
                 <div className="font-medium text-bodysm leading-5 text-text-mid">
-                  EPIC-102 (Core UI Overhaul)
+                  {task?.epic.epic_id}
                 </div>
               </div>
 
-              <p className="font-bold text-30 leading-9 text-text-primary">
-                Implement glassmorphism effect on modal
-              </p>
+              <p className="font-bold text-30 leading-9 text-text-primary"></p>
             </div>
 
             {/* description */}
             <div className="p-8 flex-1 overflow-y-auto">
               <div className="flex flex-col gap-3">
                 <p className="font-bold text-bodyxs leading-4 text-text-primary uppercase">
-                  Description
+                  description
                 </p>
                 <p className="text-bodysm leading-6 text-text-primary">
-                  Detailed task description goes here. This involves updating
-                  the modal container background to use semi-transparent surface
-                  colors with a 20px backdrop-blur to align with the Digital
-                  Curator aesthetic. Ensure contrast ratios remain accessible.
+                  {task?.description}
                 </p>
               </div>
             </div>
@@ -74,7 +138,7 @@ export function TaskDetails({ taskId, onClose }: Props) {
               </div>
 
               <select className="py-10 px-4 bg-success">
-                <option>Completed</option>
+                <option>{task?.status}</option>
               </select>
             </div>
 
@@ -84,12 +148,23 @@ export function TaskDetails({ taskId, onClose }: Props) {
                 <p className="font-bold text-bodyxs leading-4 text-text-mid uppercase">
                   assignee
                 </p>
-
-                <div className="rounded-lg p-2 gap-3 flex bg-white">
-                  <p className="rounded-xl bg-calm"></p>
+                <div className="flex gap-3 p-2 bg-white">
+                  <div className="">
+                    {task?.assignee?.name ? (
+                      <p className="rounded-lg p-1 bg-calm text-bodyx/s">
+                        {getInitials(task?.assignee?.name)}
+                      </p>
+                    ) : (
+                      <div className="w-6 h-6 rounded-xl border-[2px] flex items-center justify-center bg-calm">
+                        <UnAssignedIcon />
+                      </div>
+                    )}
+                  </div>
 
                   <div>
-                    <p className="font-semibold text-bodysm leading-5 text-slate-900"></p>
+                    <p className="font-semibold text-bodysm leading-5 text-slate-900">
+                      {task?.assignee?.name}
+                    </p>
                     <p className="text-bodyxs leading-4 text-text-mid"></p>
                   </div>
                 </div>
@@ -101,11 +176,23 @@ export function TaskDetails({ taskId, onClose }: Props) {
                   reporter
                 </p>
 
-                <div className="rounded-lg p-2 gap-3 flex">
-                  <p className="rounded-xl bg-calm"></p>
+                <div className="flex gap-3 p-2">
+                  <div className="">
+                    {task?.assignee?.name ? (
+                      <p className="rounded-lg p-1 bg-calm text-bodyx/s">
+                        {getInitials(task?.created_by?.name)}
+                      </p>
+                    ) : (
+                      <div className="w-6 h-6 rounded-xl border-[2px] flex items-center justify-center bg-calm">
+                        <UnAssignedIcon />
+                      </div>
+                    )}
+                  </div>
 
                   <div>
-                    <p className="font-medium text-bodysm leading-5 text-slate-900"></p>
+                    <p className="font-medium text-bodysm leading-5 text-slate-900">
+                      {task?.created_by?.name}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -115,12 +202,16 @@ export function TaskDetails({ taskId, onClose }: Props) {
             <div className="border-t pt-4 gap-4 flex flex-col border-slate-300/30">
               <div className="flex justify-between">
                 <p className="text-xs leading-4 text-text-mid">Due Date</p>
-                <p className="font-medium text-bodysm leading-5 text-text-primary"></p>
+                <p className="font-medium text-bodysm leading-5 text-text-primary">
+                  {formatDateENGB(task?.due_date ?? '')}
+                </p>
               </div>
 
               <div className="flex justify-between">
                 <p className="text-xs leading-4 text-text-mid">Created At</p>
-                <p className="font-medium text-bodysm leading-5 text-text-primary"></p>
+                <p className="font-medium text-bodysm leading-5 text-text-primary">
+                  {formatDateENGB(task?.created_at ?? '')}
+                </p>
               </div>
             </div>
           </div>
