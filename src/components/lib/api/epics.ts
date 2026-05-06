@@ -59,54 +59,19 @@ type prop = {
   projectId: string;
   search?: string;
 };
+
+import { searchItems } from './search';
+
 export async function GetEpics({ projectId, limit, offset, search }: prop) {
-  const query = new URLSearchParams({
-    project_id: `eq.${projectId}`,
+  return searchItems({
+    table: 'project_epics',
+    projectId,
+    limit,
+    offset,
+    search,
+    field: 'title',
   });
-
-  if (limit !== undefined) {
-    query.append('limit', String(limit));
-  }
-
-  if (offset !== undefined) {
-    query.append('offset', String(offset));
-  }
-  if (search) {
-    query.append('title', `ilike.%25${search}%25`);
-  }
-
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/project_epics?${query.toString()}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          apikey: SUPABASE_ANON_KEY!,
-          'Content-Type': 'application/json',
-          Prefer: 'count=exact',
-        },
-      },
-    );
-    let data = null;
-    try {
-      data = await res.json();
-    } catch {}
-    return {
-      ok: res.ok,
-      status: res.status,
-      data,
-      error: res.ok ? null : data?.message || 'Request failed',
-      res,
-    };
-  } catch (err: unknown) {
-    return {
-      ok: false,
-      status: 0,
-      data: null,
-      error: err instanceof Error ? err.message : 'Network error',
-    };
-  }
+  
 }
 
 type GetEpicDetailsProps = {
