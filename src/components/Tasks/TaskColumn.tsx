@@ -1,23 +1,26 @@
 'use client';
 import Link from 'next/link';
 import { PlusCircleIcon, PlusGreyIcon } from '../icons/plus';
-import { useGetTasksByStatus } from '@/hooks/getTasksByStatus';
 import { TaskCard } from './TaskCard';
+import { useDroppable } from '@dnd-kit/core';
 
 type Props = {
   projectId: string;
-  col: {
-    label: string;
-    value: string;
-  };
+  col: { label: string; value: string };
+  tasks: TaskCard[];
   onTaskClick: (id: string) => void;
 };
-
-export function TaskColumn({ projectId, col,onTaskClick }: Props) {
-  const tasks = useGetTasksByStatus(projectId, col.value);
+export function TaskColumn({ projectId, col, tasks, onTaskClick }: Props) {
+  const columnTasks = tasks.filter((t) => t.status === col.value);
+  const { setNodeRef } = useDroppable({
+    id: col.value,
+  });
 
   return (
-    <div className="min-w-280 bg-gray-50 rounded-lg flex flex-col gap-4">
+    <div
+      ref={setNodeRef}
+      className="min-w-280 bg-gray-50 rounded-lg flex flex-col gap-4 "
+    >
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="flex items-center justify-between px-1">
@@ -25,7 +28,9 @@ export function TaskColumn({ projectId, col,onTaskClick }: Props) {
             <span className="text-xs font-semibold text-gray-600">
               {col.label}
             </span>
-            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded">{5}</span>
+            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded">
+              {columnTasks.length}
+            </span>
           </div>
         </div>
         <PlusGreyIcon />
@@ -41,7 +46,10 @@ export function TaskColumn({ projectId, col,onTaskClick }: Props) {
           <p className="text-xs font-bold text-text-mid/60">ADD NEW TASK</p>
         </Link>
 
-        <TaskCard tasks={tasks}  onTaskClick={onTaskClick}/>
+        <TaskCard
+          tasks={columnTasks}
+          onTaskClick={onTaskClick}
+        />
       </div>
     </div>
   );

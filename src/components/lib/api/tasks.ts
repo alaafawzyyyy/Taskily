@@ -89,13 +89,13 @@ export async function GetTasks({
   projectId,
   epicId,
   status,
-  limit=10,
-  offset=0,
+  limit = 10,
+  offset = 0,
 }: {
   projectId: string;
   epicId?: string;
   status?: string;
-  limit?: number 
+  limit?: number;
   offset?: number;
 }) {
   let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
@@ -179,5 +179,37 @@ export async function GetTaskDetails({
     return data[0];
   } catch (err) {
     console.log(err);
+  }
+}
+
+// update tasks
+
+export async function updateTaskStatus({
+  taskId,
+  status,
+}: {
+  taskId: string;
+  status: string;
+}) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${taskId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: SUPABASE_ANON_KEY!,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!res.ok) {
+      const error = await res.text();
+      return { ok: false, error };
+    }
+
+    return { ok: true };
+  } catch (err) {
+    console.log(err);
+    return { ok: false, error: 'Network error' };
   }
 }
