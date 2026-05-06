@@ -1,4 +1,5 @@
 import { getCookie } from '../cookies';
+import { searchItems } from './search';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -6,15 +7,21 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const accessToken = getCookie('access_token');
 
 // Add task
-type TaskData = {
+export type TaskData = {
+  id: string;
+  task_id: string;
   project_id: string;
-  epic_id?: string;
+  epic_id?: string | null;
   title: string;
-  description?: string;
-  assignee_id?: string;
-  due_date?: string;
-  status?: string;
+  description?: string | null;
+  assignee_id?: string | null;
+  due_date?: string | null;
+  status: string;
+  assignee: {
+    name: string;
+  };
 };
+
 export async function addTask(data: TaskData) {
   let result = null;
   try {
@@ -84,64 +91,46 @@ export async function GetTasksAPI(Epic_Id: string) {
   }
 }
 
-// get tasks
 export async function GetTasks({
   projectId,
   epicId,
   status,
-  limit = 10,
-  offset = 0,
+  search,
+  limit,
+  offset,
 }: {
   projectId: string;
   epicId?: string;
   status?: string;
+  search?: string;
   limit?: number;
   offset?: number;
 }) {
-  let url = `${SUPABASE_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
-
-  if (epicId) {
-    url += `&epic_id=eq.${epicId}`;
-  }
-
-  if (status) {
-    url += `&status=eq.${status}`;
-  }
-
-  url += `&limit=${limit}&offset=${offset}&order=created_at.desc`;
-  const query = new URLSearchParams({
-    project_id: `eq.${projectId}`,
-  });
-
-  if (limit !== undefined) {
-    query.append('limit', String(limit));
-  }
-
-  if (offset !== undefined) {
-    query.append('offset', String(offset));
-  }
   try {
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        apikey: SUPABASE_ANON_KEY!,
-        'Content-Type': 'application/json',
-        Prefer: 'count=exact',
-      },
+    const res = await searchItems({
+      table: 'project_tasks',
+      projectId,
+      search,
+      limit,
+      offset,
+      field: 'title',
     });
 
-    let data = null;
-    try {
-      data = await res.json();
-    } catch {}
+    let data: TaskData[] = (res.data as TaskData[]) || [];
 
+    if (epicId) {
+      data = data.filter((t) => t.epic_id === epicId);
+    }
+
+    if (status) {
+      data = data.filter((t) => t.status === status);
+    }
     return {
       ok: res.ok,
       status: res.status,
       data,
-      error: res.ok ? null : data?.message || 'Request failed',
-      res,
+      error: res.error,
+      res: res.res,
     };
   } catch (err: unknown) {
     return {

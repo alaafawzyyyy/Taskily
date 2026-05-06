@@ -4,9 +4,15 @@ import { BoardViewIcon } from '../icons/BoardView';
 import { SearchIcon } from '../icons/Search';
 import { TaskButton } from '../icons/TaskButton';
 import { Path } from '../ui/Path';
-import { useSearchParams , useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-export function TaskHeader() {
+export function TaskHeader({
+  search,
+  onSearch,
+}: {
+  search: string;
+  onSearch: (value: string) => void;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const view = searchParams.get('view') || 'board';
@@ -48,6 +54,8 @@ export function TaskHeader() {
             <SearchIcon />
             <input
               type="text"
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
               placeholder="Search tasks..."
               className="bg-transparent outline-none text-sm w-full placeholder:text-gray-400"
             />

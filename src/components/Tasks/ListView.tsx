@@ -8,9 +8,10 @@ import ProjectFooter from '../showProjects/ProjectsFooter';
 
 type Props = {
   onSelectTask: (id: string) => void;
+  search: string;
 };
 
-export function ListView({ onSelectTask }: Props) {
+export function ListView({ onSelectTask, search }: Props) {
   const [tasks, setTasks] = useState<TaskCard[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
@@ -33,6 +34,7 @@ export function ListView({ onSelectTask }: Props) {
           projectId,
           offset,
           limit,
+          search,
         });
         const contentRange = res.res?.headers.get('content-range');
         let totall: number = 0;
@@ -43,23 +45,32 @@ export function ListView({ onSelectTask }: Props) {
         }
 
         if (res.ok) {
-          setTasks(res.data || []);
-        }
-        if (isMobile) {
-          if (currentPage === 1) {
-            setTasks(res.data);
+          const newData: TaskCard[] = (res.data || []).map((t) => ({
+            id: t.id,
+            task_id: t.task_id,
+            title: t.title,
+            status: t.status ?? 'TO_DO',
+            due_date: t.due_date ?? '',
+            assignee: t.assignee_id
+              ? { name: t.assignee_id }
+              : { name: 'Unassigned' },
+          }));
+          if (isMobile) {
+            if (currentPage === 1) {
+              setTasks(newData);
+            } else {
+              setTasks((prev) => [...prev, ...newData]);
+            }
           } else {
-            setTasks((prev) => [...prev, ...res.data]);
+            setTasks(newData);
           }
         }
       } catch (err) {
         console.log(err);
       }
     };
-
     fetchTasks();
-  }, [projectId, currentPage]);
-
+  }, [projectId, currentPage, search]);  
   const totalPages: number = Math.ceil(total / limit);
 
   // checking mobile to activate the infinite scroll
@@ -93,7 +104,7 @@ export function ListView({ onSelectTask }: Props) {
       observer.disconnect();
     };
   }, [currentPage, totalPages, isMobile]);
-  
+
   return (
     <div className="pb-6 hidden md:block">
       <div className="px-4 py-3 rounded-lg grid grid-cols-7 items-center">

@@ -13,14 +13,20 @@ type SearchProps = {
   field?: string;
 };
 
-export async function searchItems({
+export async function searchItems<T>({
   table,
   projectId,
   limit,
   offset,
   search,
   field = 'title',
-}: SearchProps) {
+}: SearchProps): Promise<{
+  ok: boolean;
+  status: number;
+  data: T[];
+  error: string | null;
+  res: Response;
+}> {
   let url = `${SUPABASE_URL}/rest/v1/${table}?`;
 
   const params = [];
@@ -53,7 +59,7 @@ export async function searchItems({
     },
   });
 
-  const data = await res.json();
+const data: T[] = await res.json();
 
   return {
     ok: res.ok,

@@ -12,20 +12,20 @@ import type { DragEndEvent } from '@dnd-kit/core';
 
 type Props = {
   onSelectTask: (id: string) => void;
+  search: string;
 };
 
-export function ViewBoard({ onSelectTask }: Props) {
+export function ViewBoard({ onSelectTask, search }: Props) {
   const params = useParams();
   const projectId =
     typeof params.projectId === 'string' ? params.projectId : '';
 
-  const tasksFromApi = useGetAllTasks(projectId) as TaskCard[];
+  const tasksFromApi = useGetAllTasks(projectId ,search) as TaskCard[];
   const [overrides, setOverrides] = useState<Record<string, string>>({});
   const mergedTasks = tasksFromApi.map((t) => ({
     ...t,
     status: overrides[t.id] ?? t.status,
   }));
-
   const handleDragEnd = async (event: DragEndEvent) => {
     if (!event.over) return;
 

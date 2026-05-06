@@ -159,7 +159,7 @@ export function ShowEpics() {
         router.push('/login');
         return;
       } else if (res.ok && res.data) {
-        const data = res.data;
+        const data = (res.data as Epic[]) || [];
 
         if (isMobile) {
           if (currentPage === 1) {

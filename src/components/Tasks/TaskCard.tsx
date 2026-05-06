@@ -6,10 +6,11 @@ export type TaskCard = {
   title: string;
   status: string;
   due_date: string;
+  task_id: string;
   assignee: {
     name: string;
   };
-  task_id: 'string';
+  
 };
 
 type Props = {
