@@ -9,6 +9,7 @@ type Epic = {
 
 export function useProjectEpics(projectId?: string) {
   const [epics, setEpics] = useState<Epic[]>([]);
+  
   useEffect(() => {
     if (!projectId) return;
 
@@ -16,7 +17,7 @@ export function useProjectEpics(projectId?: string) {
       const res = await GetEpics({ projectId });
 
       if (res.ok) {
-        setEpics(res.data || []);
+        setEpics((res.data as Epic[]) || []);
       }
     };
 

@@ -14,15 +14,24 @@ export type TaskData = {
   epic_id?: string | null;
   title: string;
   description?: string | null;
-  assignee_id?: string | null;
   due_date?: string | null;
   status: string;
-  assignee: {
+  assignee?: {
     name: string;
   };
 };
 
-export async function addTask(data: TaskData) {
+export type CreateTaskData = {
+  project_id: string;
+  epic_id?: string;
+  title: string;
+  description?: string;
+  assignee_id?: string;
+  due_date?: string;
+  status?: string;
+};
+
+export async function addTask(data: CreateTaskData) {
   let result = null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {

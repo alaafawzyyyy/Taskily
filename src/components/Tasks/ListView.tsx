@@ -9,11 +9,17 @@ import ProjectFooter from '../showProjects/ProjectsFooter';
 type Props = {
   onSelectTask: (id: string) => void;
   search: string;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export function ListView({ onSelectTask, search }: Props) {
+export function ListView({
+  onSelectTask,
+  search,
+  currentPage,
+  setCurrentPage,
+}: Props) {
   const [tasks, setTasks] = useState<TaskCard[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
   const [isMobile, setIsMobile] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -51,9 +57,9 @@ export function ListView({ onSelectTask, search }: Props) {
             title: t.title,
             status: t.status ?? 'TO_DO',
             due_date: t.due_date ?? '',
-            assignee: t.assignee_id
-              ? { name: t.assignee_id }
-              : { name: 'Unassigned' },
+            assignee: {
+              name: t.assignee?.name ?? 'Unassigned',
+            },
           }));
           if (isMobile) {
             if (currentPage === 1) {
@@ -70,7 +76,7 @@ export function ListView({ onSelectTask, search }: Props) {
       }
     };
     fetchTasks();
-  }, [projectId, currentPage, search]);  
+  }, [projectId, currentPage, search]);
   const totalPages: number = Math.ceil(total / limit);
 
   // checking mobile to activate the infinite scroll
