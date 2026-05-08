@@ -25,7 +25,7 @@ export function AddMember({ setOpen }: prop) {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(inviteSchema),
     mode: 'onChange',
@@ -90,8 +90,11 @@ export function AddMember({ setOpen }: prop) {
         >
           Cancel
         </button>
-        <button className="w-full pt-13.5 pb-14.5 font-semibold text-bodysm text-white leading-5 rounded-sm bg-gradient-to-b from-primary to-primary-light">
-          Send Invitation
+        <button
+          disabled={isSubmitting}
+          className="w-full pt-13.5 pb-14.5 font-semibold text-bodysm text-white leading-5 rounded-sm bg-gradient-to-b from-primary to-primary-light"
+        >
+          {isSubmitting ? 'Sending...' : 'Send Invitation'}{' '}
         </button>
       </div>
     </form>

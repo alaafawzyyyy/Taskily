@@ -68,6 +68,7 @@ module.exports = {
         bodyxl: '22.5px',
         body16: '16px',
         bodyxxs: '8px',
+        bodylg:'30px'
       },
       spacing: {
         21: '84px',
@@ -102,6 +103,7 @@ module.exports = {
       },
       letterSpacing: {
         tight: '0.6px',
+        tighter: '0.55px',
       },
       lineHeight: {
         tight: '15px',

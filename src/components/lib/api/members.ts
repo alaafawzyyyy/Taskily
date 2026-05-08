@@ -2,7 +2,6 @@ import { getCookie } from '../cookies';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const accessToken = getCookie('access_token');
 
 // Add Member
 export type AddMemberType = {
@@ -11,6 +10,7 @@ export type AddMemberType = {
 };
 
 export async function AddMemberAPI(finalData: AddMemberType) {
+  const accessToken = getCookie('access_token');
   let result = null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/invite_member`, {
@@ -37,6 +37,41 @@ export async function AddMemberAPI(finalData: AddMemberType) {
         result?.error || result?.message || 'Something went wrong';
 
       return { ok: false, error: message };
+    }
+
+    return { ok: true, data: result, error: null };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : 'No internet connection',
+    };
+  }
+}
+
+// accept invitation
+export async function acceptInvitation(token: string) {
+  const accessToken = getCookie('access_token');
+  let result = null;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/accept_invitation`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: SUPABASE_ANON_KEY!,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_token: token }),
+    });
+
+    try {
+      result = await res.json();
+    } catch {}
+
+    if (!res.ok) {
+      const message =
+        result?.error || result?.message || 'Something went wrong';
+
+      return { ok: false, error: message, status: res.status };
     }
 
     return { ok: true, data: result, error: null };

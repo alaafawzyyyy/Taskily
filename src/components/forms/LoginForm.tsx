@@ -4,10 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema, LoginFormData } from '../lib/validation/LoginSchema';
 import { useForm } from 'react-hook-form';
 import { auth } from '../lib/api/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const [error, setError] = useState('');
   const router = useRouter();
   const {
@@ -22,7 +24,8 @@ export default function LoginForm() {
         email: data.email,
         password: data.password,
       });
-      router.replace('/project');
+
+      router.replace(redirect || '/project');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unexpected error';
       setError(message);
