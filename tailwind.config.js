@@ -21,6 +21,7 @@ module.exports = {
         'bg-primary': '#036EFF',
         'bg-soft': '#EEF4FB',
         dark: '#C3C6D64D',
+        darker: '#737685',
 
         'text-primary': '#041b3c',
         'text-secondary': '#4f5f7b',
@@ -94,6 +95,10 @@ module.exports = {
         '/2': '2px',
         '/11': '11px',
         576: '576px',
+        448: '448px',
+        14: '14px',
+        13.5: '13.5px',
+        14.5: '14.5px',
       },
       letterSpacing: {
         tight: '0.6px',
