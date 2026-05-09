@@ -23,12 +23,18 @@ export function DraggableTask({ task, onTaskClick }: DraggableTaskProps) {
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
       {...attributes}
       style={style}
       onClick={() => onTaskClick(task.id)}
       className="bg-white p-4 rounded-lg border shadow-sm flex flex-col gap-4 cursor-pointer"
     >
+      <div
+        {...listeners}
+        className="text-xs text-gray-400 cursor-grab"
+      >
+        Drag
+      </div>
+
       <p className="text-sm font-medium leading-5 text-slate-900">
         {task.title}
       </p>
